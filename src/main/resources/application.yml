@@ -1,0 +1,37 @@
+spring:
+  elasticsearch:
+    rest:
+      uris: http://192.168.3.1:9200
+      connection-timeout: 10s
+  datasource:
+    url: jdbc:mysql://localhost:3306/oj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    type:  com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+# mybatis-plus
+mybatis-plus:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+server:
+  port: 8082
+
+
+# canal配置
+canal:
+  host: 127.0.0.1 # 单机用
+  port: 11111
+  destination: code #环境共用参数
+  username:
+  password:
+  subscribe: code # 订阅的表
+  zk-server-list: X.X.X.X:2181,X.X.X.X:2181 # 高可用
+
+
+
+logging:
+  level:
+    cn.sdutacm.*: info

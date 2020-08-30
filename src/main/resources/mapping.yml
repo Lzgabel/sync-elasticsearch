@@ -1,0 +1,16 @@
+# 索引及表结构映射
+#schema:
+#  talbe:
+#    index: 索引名称
+#    type: 类型
+#    primary-key: 数据库主键
+#
+#
+
+index:
+  mappings:
+    oj:
+      code:
+        index: code_index
+        type: _doc
+        primary-key: code_id
