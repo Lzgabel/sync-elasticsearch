@@ -58,6 +58,7 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
         long total = baseDao.count(primaryKey, request.getDatabase(), request.getTable(), minPK, maxPK);
         cachedThreadPool.submit(() -> {
             try {
+                // TODO bug 待修复
                 for (long i = minPK; i <= total; i += request.getStepSize()) {
                     transactionalService.batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize(), indexProperties);
                     log.info("当前同步pk={}，stepSize={}, 总共total={}", i, request.getStepSize(), total);
