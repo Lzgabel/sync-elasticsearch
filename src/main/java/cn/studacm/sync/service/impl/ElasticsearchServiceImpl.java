@@ -102,7 +102,11 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
         BeanUtils.copyProperties(solution, codeDocument);
         BeanUtils.copyProperties(user, codeDocument);
         if (StringUtils.isNotBlank(code.getCodeContent())) {
-            codeDocument.setCodeLines(StringUtils.countMatches(code.getCodeContent(), "\r\n")+1);
+            if (StringUtils.contains(code.getCodeContent(), "\r")) {
+                codeDocument.setCodeLines(StringUtils.countMatches(code.getCodeContent(), "\r\n") + 1);
+            } else {
+                codeDocument.setCodeLines(StringUtils.countMatches(code.getCodeContent(), "\n") + 1);
+            }
         }
         return codeDocument;
     }
