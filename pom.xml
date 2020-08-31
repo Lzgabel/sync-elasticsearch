@@ -155,15 +155,10 @@
                 <executions>
                     <execution>
                         <goals>
-                            <!-- 替换资源文件(编译阶段) -->
-                            <goal>replace-resources</goal>
+                            <goal>replace-package</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <!-- 配置资源路径(可通过 -DresourcePath=path 覆盖 -->
-                    <resourcePath>src/main/resources</resourcePath>
-                </configuration>
             </plugin>
 
             <plugin>
