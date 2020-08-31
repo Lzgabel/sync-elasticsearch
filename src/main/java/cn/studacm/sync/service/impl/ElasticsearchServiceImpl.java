@@ -4,7 +4,7 @@ import cn.studacm.sync.document.CodeDocument;
 import cn.studacm.sync.entity.Code;
 import cn.studacm.sync.entity.Solution;
 import cn.studacm.sync.entity.User;
-import cn.studacm.sync.service.ElasticsearchService;
+import cn.studacm.sync.service.IElasticsearchService;
 import cn.studacm.sync.service.ISolutionService;
 import cn.studacm.sync.service.IUserService;
 import cn.studacm.sync.util.JsonUtil;
@@ -32,7 +32,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Service
-public class ElasticsearchServiceImpl implements ElasticsearchService {
+public class ElasticsearchServiceImpl implements IElasticsearchService {
 
     @Autowired
     IUserService userService;

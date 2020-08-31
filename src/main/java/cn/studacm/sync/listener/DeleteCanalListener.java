@@ -1,7 +1,7 @@
 package cn.studacm.sync.listener;
 
 import cn.studacm.sync.event.DeleteCanalEvent;
-import cn.studacm.sync.service.ElasticsearchService;
+import cn.studacm.sync.service.IElasticsearchService;
 import com.alibaba.otter.canal.protocol.CanalEntry.Column;
 import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import java.util.List;
 public class DeleteCanalListener extends AbstractCanalListener<DeleteCanalEvent> {
 
     @Autowired
-    private ElasticsearchService elasticsearchService;
+    private IElasticsearchService IElasticsearchService;
 
     @Override
     protected void doSync(String database, String table, String index, String type, RowData rowData) {
@@ -37,7 +37,7 @@ public class DeleteCanalListener extends AbstractCanalListener<DeleteCanalEvent>
         }
         log.debug("delete_column_id_info insert主键id,database=" + database + ",table=" + table + ",id=" + idColumn.getValue());
         // 删除 es 数据
-        elasticsearchService.deleteById(index, type, idColumn.getValue());
+        IElasticsearchService.deleteById(index, type, idColumn.getValue());
         log.debug("delete_es_info 同步es插入操作成功！database=" + database + ",table=" + table + ",id=" + idColumn.getValue());
     }
 }

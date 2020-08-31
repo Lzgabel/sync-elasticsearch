@@ -11,7 +11,7 @@ import cn.studacm.sync.model.request.SyncByTableRequest;
  * @date 2020-08-19
  * @since 1.0.0
  */
-public interface TransactionalService {
+public interface ITransactionalService {
 
     /**
      * 开启事务的读取mysql并插入到Elasticsearch中（读锁）

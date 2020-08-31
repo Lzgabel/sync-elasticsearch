@@ -11,7 +11,7 @@ import java.util.Map;
  * @date 2020-08-19
  * @since 1.0.0
  */
-public interface ElasticsearchService {
+public interface IElasticsearchService {
     void insertById(String index, String type, String id, Map<String, Object> dataMap);
 
     void batchInsertById(String index, String type, List<Map<String, Object>> dataList);

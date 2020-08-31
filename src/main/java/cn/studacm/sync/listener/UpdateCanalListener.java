@@ -1,7 +1,7 @@
 package cn.studacm.sync.listener;
 
 import cn.studacm.sync.event.UpdateCanalEvent;
-import cn.studacm.sync.service.ElasticsearchService;
+import cn.studacm.sync.service.IElasticsearchService;
 import com.alibaba.otter.canal.protocol.CanalEntry.Column;
 import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class UpdateCanalListener extends AbstractCanalListener<UpdateCanalEvent> {
 
     @Resource
-    private ElasticsearchService elasticsearchService;
+    private IElasticsearchService IElasticsearchService;
 
     @Override
     protected void doSync(String database, String table, String index, String type, RowData rowData) {
@@ -38,7 +38,7 @@ public class UpdateCanalListener extends AbstractCanalListener<UpdateCanalEvent>
         }
         log.debug("update_column_id_info update主键id,database=" + database + ",table=" + table + ",id=" + idColumn.getValue());
         Map<String, Object> dataMap = parseColumnsToMap(columns);
-        elasticsearchService.update(index, type, idColumn.getValue(), dataMap);
+        IElasticsearchService.update(index, type, idColumn.getValue(), dataMap);
         log.debug("update_es_info 同步es插入操作成功！database=" + database + ",table=" + table + ",data=" + dataMap);
     }
 }

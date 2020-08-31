@@ -10,7 +10,7 @@ import cn.studacm.sync.model.request.SyncByTableRequest;
  * @date 2020-08-19
  * @since 1.0.0
  */
-public interface SyncService {
+public interface ISyncService {
     /**
      * 通过database和table同步数据库
      *

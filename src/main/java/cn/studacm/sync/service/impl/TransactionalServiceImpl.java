@@ -2,8 +2,8 @@ package cn.studacm.sync.service.impl;
 
 import cn.studacm.sync.configuration.IndexProperties;
 import cn.studacm.sync.model.request.SyncByTableRequest;
-import cn.studacm.sync.service.ElasticsearchService;
-import cn.studacm.sync.service.TransactionalService;
+import cn.studacm.sync.service.IElasticsearchService;
+import cn.studacm.sync.service.ITransactionalService;
 import cn.studacm.sync.dao.BaseDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 〈功能简述〉<br>
@@ -26,13 +24,13 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @Service
-public class TransactionalServiceImpl implements TransactionalService {
+public class TransactionalServiceImpl implements ITransactionalService {
 
     @Resource
     private BaseDao baseDao;
 
     @Resource
-    private ElasticsearchService elasticsearchService;
+    private IElasticsearchService IElasticsearchService;
 
     @Transactional(readOnly = true, rollbackFor = Exception.class)
     @Override
@@ -41,7 +39,7 @@ public class TransactionalServiceImpl implements TransactionalService {
         if (dataList == null || dataList.isEmpty()) {
             return;
         }
-        elasticsearchService.batchInsertById(indexProperties.getIndex(), indexProperties.getType(), dataList);
+        IElasticsearchService.batchInsertById(indexProperties.getIndex(), indexProperties.getType(), dataList);
     }
 
     private List<Map<String, Object>> convertDateType(List<Map<String, Object>> source) {

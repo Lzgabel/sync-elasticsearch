@@ -2,11 +2,10 @@ package cn.studacm.sync.controller;
 
 import cn.studacm.sync.model.request.SyncByTableRequest;
 import cn.studacm.sync.model.response.Response;
-import cn.studacm.sync.service.SyncService;
+import cn.studacm.sync.service.ISyncService;
 import cn.studacm.sync.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ public class SyncController {
     private static final Logger logger = LoggerFactory.getLogger(SyncController.class);
 
     @Resource
-    private SyncService syncService;
+    private ISyncService ISyncService;
 
     /**
      * 通过库名和表名全量同步数据
@@ -36,7 +35,7 @@ public class SyncController {
     @PostMapping("/byTable")
     public String syncTable(@Validated @RequestBody SyncByTableRequest request) {
         logger.debug("request_info: " + JsonUtil.toJson(request));
-        String response = Response.success(syncService.syncByTable(request)).toString();
+        String response = Response.success(ISyncService.syncByTable(request)).toString();
         logger.debug("response_info: " + JsonUtil.toJson(request));
         return response;
     }

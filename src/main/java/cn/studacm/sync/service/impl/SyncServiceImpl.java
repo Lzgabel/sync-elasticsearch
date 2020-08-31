@@ -3,8 +3,8 @@ package cn.studacm.sync.service.impl;
 import cn.studacm.sync.configuration.IndexProperties;
 import cn.studacm.sync.configuration.MappingProperties;
 import cn.studacm.sync.model.request.SyncByTableRequest;
-import cn.studacm.sync.service.SyncService;
-import cn.studacm.sync.service.TransactionalService;
+import cn.studacm.sync.service.ISyncService;
+import cn.studacm.sync.service.ITransactionalService;
 import cn.studacm.sync.dao.BaseDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -27,7 +27,7 @@ import java.util.concurrent.*;
  */
 @Slf4j
 @Service
-public class SyncServiceImpl implements SyncService, InitializingBean, DisposableBean {
+public class SyncServiceImpl implements ISyncService, InitializingBean, DisposableBean {
     /**
      * 使用线程池控制并发数量
      */
@@ -38,7 +38,7 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
 
 
     @Resource
-    private TransactionalService transactionalService;
+    private ITransactionalService ITransactionalService;
 
     @Autowired
     MappingProperties properties;
@@ -60,7 +60,7 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
             try {
                 long count = minPK > total ? minPK + total : total;
                 for (long i = minPK; i < count; i += request.getStepSize()) {
-                    transactionalService.batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize()-1, indexProperties);
+                    ITransactionalService.batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize()-1, indexProperties);
                     log.info("当前同步pk={}，stepSize={}, 总共total={}", i, request.getStepSize(), total);
                 }
                 log.info("同步完成");

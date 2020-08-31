@@ -3,7 +3,7 @@ package cn.studacm.sync.listener;
 import com.alibaba.otter.canal.protocol.CanalEntry.Column;
 import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
 import cn.studacm.sync.event.InsertCanalEvent;
-import cn.studacm.sync.service.ElasticsearchService;
+import cn.studacm.sync.service.IElasticsearchService;
 import cn.studacm.sync.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class InsertCanalListener extends AbstractCanalListener<InsertCanalEvent> {
 
     @Resource
-    private ElasticsearchService elasticsearchService;
+    private IElasticsearchService IElasticsearchService;
 
     @Override
     protected void doSync(String database, String table, String index, String type, RowData rowData) {
@@ -41,7 +41,7 @@ public class InsertCanalListener extends AbstractCanalListener<InsertCanalEvent>
 
         // 同步 es
         Map<String, Object> dataMap = parseColumnsToMap(columns);
-        elasticsearchService.insertById(index, type, idColumn.getValue(), dataMap);
+        IElasticsearchService.insertById(index, type, idColumn.getValue(), dataMap);
 
         log.debug("insert_es_info 同步es插入操作成功！database=" + database + ",table=" + table + ",data=" + JsonUtil.toJson(dataMap));
     }
