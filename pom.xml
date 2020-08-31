@@ -32,12 +32,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- elasticsearch 相关 -->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
-<!--        </dependency>-->
-
         <!-- redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -152,6 +146,26 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
             </plugin>
+
+            <plugin>
+                <!-- 环境打包工具 -->
+                <groupId>com.juvenxu.portable-config-maven-plugin</groupId>
+                <artifactId>portable-config-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- 替换资源文件(编译阶段) -->
+                            <goal>replace-resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- 配置资源路径(可通过 -DresourcePath=path 覆盖 -->
+                    <resourcePath>src/main/resources</resourcePath>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.1</version>
@@ -201,24 +215,18 @@
         </plugins>
     </build>
 
-
-    <!--
-       脚手架初始化
-       1. mvn archetype:create-from-project
-       2. 如果有自定义变量参数, 需添加到 src/archetype-metadata.xml
-       3. 执行脚手架初始化脚本 bash init.sh
-       4. target/generated-sources/{artifactId} 下执行 mvn clean install 安装到本地 (选)
-       5. 部署到远程 mvn clean deploy
-       6. 使用:
-           mvn archetype:generate \
-           -DarchetypeGroupId=com.lzgabel \
-           -DarchetypeArtifactId=archetype \
-           -DarchetypeVersion=1.0.0-SNAPSHOT \
-           -DgroupId=com.lzgabel \
-           -DartifactId=test \
-           -Dpackage=com.lzgabel.test \
-           -DinteractiveMode=false (关闭交互) \
-           -X(debug模式) \
-           -DarchetypeCatalog=local(本地)/internal(内部)
-    -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>private-central</id>
+            <url>http://116.62.222.54/repository/maven-central/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
