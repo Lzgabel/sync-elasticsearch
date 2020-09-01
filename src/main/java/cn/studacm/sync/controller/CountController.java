@@ -37,7 +37,7 @@ public class CountController {
 
     private static final LocalDate BEGIN_DATE = TimeUtil.parseLocalDate("2006-01-01 00:00:00");
 
-    @GetMapping("/year")
+    @GetMapping
     public Response<List<CountResponse>> count() {
 
         LocalDate now = LocalDate.now();
