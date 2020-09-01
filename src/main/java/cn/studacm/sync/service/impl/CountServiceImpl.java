@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 〈功能简述〉<br>
@@ -58,6 +59,10 @@ public class CountServiceImpl implements ICountService {
 
         if (StringUtils.isNotBlank(request.getUserId())) {
             boolQueryBuilder.must(QueryBuilders.termQuery("userId", request.getUserId()));
+        }
+
+        if (Objects.nonNull(request.getResult())) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("result", request.getResult()));
         }
 
         searchSourceBuilder.query(boolQueryBuilder);

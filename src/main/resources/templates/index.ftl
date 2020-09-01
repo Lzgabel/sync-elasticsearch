@@ -32,9 +32,9 @@
                 <ul>
                     <li>
                         <div class="liIn">
-                            <h3>这里是标题1</h3>
-                            <p class="shu"><span class="shu1">6890.69</span><i>元</i></p>
-                            <div class="zi"><span class="span1">小标题：文字</span><span>小标题：文字</span></div>
+                            <h3>总计</h3>
+                            <p class="shu"><span class="shu1">${all}</span><i>行</i></p>
+                            <div class="zi"><span class="span1"></span><span></span></div>
                             <span class="border_bg_leftTop"></span>
                             <span class="border_bg_rightTop"></span>
                             <span class="border_bg_leftBottom"></span>
@@ -43,9 +43,9 @@
                     </li>
                     <li>
                         <div class="liIn">
-                            <h3>这里是标题2</h3>
-                            <p class="shu"><span class="shu2">6090.99</span><i>元</i></p>
-                            <div class="zi"><span class="span1">小标题：文字</span><span>小标题：文字</span></div>
+                            <h3>年平均</h3>
+                            <p class="shu"><span class="shu2">${avg}</span><i>行</i></p>
+                            <div class="zi"><span class="span1"></span><span></span></div>
                             <span class="border_bg_leftTop"></span>
                             <span class="border_bg_rightTop"></span>
                             <span class="border_bg_leftBottom"></span>
@@ -54,9 +54,9 @@
                     </li>
                     <li>
                         <div class="liIn">
-                            <h3>这里是标题3</h3>
-                            <p class="shu"><span class="shu3">2890.39</span><i>元</i></p>
-                            <div class="zi"><span class="span1">小标题：文字</span><span>小标题：文字</span></div>
+                            <h3>Accepted</h3>
+                            <p class="shu"><span class="shu2">${ac}</span><i>行</i></p>
+                            <div class="zi"><span class="span1"></span><span></span></div>
                             <span class="border_bg_leftTop"></span>
                             <span class="border_bg_rightTop"></span>
                             <span class="border_bg_leftBottom"></span>
@@ -65,9 +65,9 @@
                     </li>
                     <li>
                         <div class="liIn">
-                            <h3>这里是标题4</h3>
-                            <p class="shu"><span class="shu4">7590.15</span><i>元</i></p>
-                            <div class="zi"><span class="span1">小标题：文字</span><span>小标题：文字</span></div>
+                            <h3>Other</h3>
+                            <p class="shu"><span class="shu4">${other}</span><i>行</i></p>
+                            <div class="zi"><span class="span1"></span><span></span></div>
                             <span class="border_bg_leftTop"></span>
                             <span class="border_bg_rightTop"></span>
                             <span class="border_bg_leftBottom"></span>
@@ -77,6 +77,7 @@
                 </ul>
             </div>
         </div>
+
         <div class="leftMain_middle">
             <div class="leftMain_middle_left">
                 <div class="leftMain_middle_leftIn">
@@ -491,7 +492,7 @@
     <div class="rightMain">
         <div class="rightMain_top">
             <div class="rightMain_topIn">
-                <h3>这里是标题</h3>
+                <h3>数据情况统计</h3>
                 <div class="biaoge"
                      style="width: 100%; height: 30vh; -webkit-tap-highlight-color: transparent; user-select: none; position: relative;"
                      id="chartmain_bing" _echarts_instance_="ec_1598945994795">
@@ -514,7 +515,7 @@
                         },
                         tooltip: {
                             trigger: 'item',
-                            formatter: '{a} <br/>{b} : {c} ({d}%)'
+                            formatter: '{b} : {c} ({d}%)'
                         },
                         legend: {
                             // orient: 'vertical',
@@ -525,7 +526,7 @@
                             top: 40,
                             bottom: 20,
                             left: 'right',
-                            data: ['西凉', '益州', '兖州', '荆州', '幽州'],
+                            data: ['AC', 'WA', 'TLE', 'OL', 'RE', 'PE', 'CE', 'SE'],
                             textStyle: {
                                 color: '#fff',
                                 fontSize: 12
@@ -538,7 +539,7 @@
                             x2: 20,
                             y2: 20,
                         },
-                        color: ['#09d0fb', '#f88cfb', '#95f8fe', '#f9f390', '#ecfeb7'],
+                        //color: ['#09d0fb', '#f88cfb', '#95f8fe', '#f9f390', '#ecfeb7', '#09d0fb', '#f88cfb', '#95f8fe', '#f9f390', '#ecfeb7'],
                         series: [
                             {
                                 type: 'pie',
@@ -546,11 +547,20 @@
                                 center: ['50%', '50%'],
                                 selectedMode: 'single',
                                 data: [
-                                    {value: 1548, name: '幽州',},
-                                    {value: 535, name: '荆州'},
-                                    {value: 510, name: '兖州'},
-                                    {value: 634, name: '益州'},
-                                    {value: 735, name: '西凉'}
+                                    <#list pies as map>
+                                        {
+                                            <#list map?keys as itemKey>
+
+                                            <#if itemKey="name">
+                                            'name': "${map[itemKey]}",
+                                            </#if>
+                                            <#if itemKey="value">
+                                            'value': ${map[itemKey]}
+                                            </#if>
+
+                                            </#list>
+                                        },
+                                    </#list>
                                 ],
                                 emphasis: {
                                     itemStyle: {
@@ -563,7 +573,9 @@
                         ]
                     };
                     //获取dom容器
-                    var myChart = echarts.init(document.getElementById('chartmain_bing'));
+                    const theme = 'light';
+                    console.log('theme', theme);
+                    var myChart = echarts.init(document.getElementById('chartmain_bing'), theme);
                     // 使用刚指定的配置项和数据显示图表。
                     myChart.setOption(option);
 

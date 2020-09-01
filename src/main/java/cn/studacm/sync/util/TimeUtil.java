@@ -2,6 +2,7 @@ package cn.studacm.sync.util;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -19,7 +20,12 @@ public class TimeUtil {
     /**
      * yyyy-MM-dd HH:mm:ss
      */
-    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    /**
+     * yyyy-MM-dd HH:mm:ss
+     */
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
     /**
@@ -77,6 +83,26 @@ public class TimeUtil {
     }
 
     /**
+     * Date转DateString
+     *
+     * @param date
+     * @return
+     */
+    public static String toDateString(Date date) {
+        return toLocalDateTime(date).format(DATE_FORMATTER);
+    }
+
+    /**
+     * Date转DateTimeString
+     *
+     * @param date
+     * @return
+     */
+    public static String toDateTimeString(Date date) {
+        return toLocalDateTime(date).format(DATE_TIME_FORMATTER);
+    }
+
+    /**
      * LocalDateTime转Date
      *
      * @param localDateTime
@@ -84,6 +110,27 @@ public class TimeUtil {
      */
     public static Date toDate(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+
+    /**
+     * LocalDateTime转DateString
+     *
+     * @param localDateTime
+     * @return
+     */
+    public static String toDateString(LocalDateTime localDateTime) {
+        return localDateTime.format(DATE_FORMATTER);
+    }
+
+    /**
+     * LocalDateTime转DateTimeString
+     *
+     * @param localDateTime
+     * @return
+     */
+    public static String toDateTimeString(LocalDateTime localDateTime) {
+        return localDateTime.format(DATE_TIME_FORMATTER);
     }
 
     /**
@@ -94,6 +141,26 @@ public class TimeUtil {
      */
     public static Date toDate(LocalDate localDate) {
         return  Date.from(localDate.atStartOfDay(ZoneOffset.ofHours(8)).toInstant());
+    }
+
+    /**
+     * LocalDateTime转DateString
+     *
+     * @param localDate
+     * @return
+     */
+    public static String toDateString(LocalDate localDate) {
+        return  localDate.format(DATE_FORMATTER);
+    }
+
+    /**
+     * LocalDateTime转DateTimeString
+     *
+     * @param localDate
+     * @return
+     */
+    public static String toDateTimeString(LocalDate localDate) {
+        return  localDate.format(DATE_TIME_FORMATTER);
     }
 
     public static int getYear(LocalDate date) {
@@ -268,15 +335,15 @@ public class TimeUtil {
     }
 
     public static LocalDateTime parseLocalDateTime(String dateTime) {
-        return LocalDateTime.parse(dateTime, FORMATTER);
+        return LocalDateTime.parse(dateTime, DATE_TIME_FORMATTER);
     }
 
     public static LocalDate parseLocalDate(String dateTime) {
-        return LocalDate.parse(dateTime, FORMATTER);
+        return LocalDate.parse(dateTime, DATE_TIME_FORMATTER);
     }
 
     public static Date parseDate(String dateTime) {
-        return toDate(LocalDateTime.parse(dateTime, FORMATTER));
+        return toDate(LocalDateTime.parse(dateTime, DATE_TIME_FORMATTER));
     }
 
 }

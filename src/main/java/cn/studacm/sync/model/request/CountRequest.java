@@ -36,4 +36,9 @@ public class CountRequest {
      * user id
      */
     private String userId;
+
+    /**
+     * result
+     */
+    private Integer result;
 }
