@@ -144,6 +144,12 @@
             <version>7.6.2</version>
         </dependency>
 
+        <!-- freemarker -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

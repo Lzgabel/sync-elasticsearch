@@ -23,9 +23,6 @@ import java.util.List;
 @Component
 public class DeleteCanalListener extends AbstractCanalListener<DeleteCanalEvent> {
 
-    @Autowired
-    private IElasticsearchService IElasticsearchService;
-
     @Override
     protected void doSync(String database, String table, String index, String type, RowData rowData) {
         List<Column> columns = rowData.getBeforeColumnsList();
@@ -37,7 +34,8 @@ public class DeleteCanalListener extends AbstractCanalListener<DeleteCanalEvent>
         }
         log.debug("delete_column_id_info insert主键id,database=" + database + ",table=" + table + ",id=" + idColumn.getValue());
         // 删除 es 数据
-        IElasticsearchService.deleteById(index, type, idColumn.getValue());
+        IElasticsearchService elasticsearchService = getElasticsearchService(database, table);
+        elasticsearchService.deleteById(index, type, idColumn.getValue());
         log.debug("delete_es_info 同步es插入操作成功！database=" + database + ",table=" + table + ",id=" + idColumn.getValue());
     }
 }

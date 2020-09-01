@@ -20,4 +20,6 @@ public class IndexProperties {
 
     private String primaryKey;
 
+    private String processBeanName;
+
 }

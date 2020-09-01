@@ -96,6 +96,10 @@ public class TimeUtil {
         return  Date.from(localDate.atStartOfDay(ZoneOffset.ofHours(8)).toInstant());
     }
 
+    public static int getYear(LocalDate date) {
+        return date.getYear();
+    }
+
     /**
      * 添加指定时间差
      *

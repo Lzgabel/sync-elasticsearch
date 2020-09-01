@@ -1,11 +1,10 @@
 package cn.studacm.sync.entity;
 
-import cn.studacm.sync.entity.base.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -40,6 +39,7 @@ public class Solution {
 
     private Integer codeLength;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date subTime;
 
     private Integer result;

@@ -1,5 +1,7 @@
 package cn.studacm.sync.listener;
 
+import cn.studacm.sync.service.IElasticsearchService;
+import cn.studacm.sync.util.BeanKit;
 import com.alibaba.otter.canal.protocol.CanalEntry.Column;
 import com.alibaba.otter.canal.protocol.CanalEntry.Entry;
 import com.alibaba.otter.canal.protocol.CanalEntry.RowChange;
@@ -93,17 +95,12 @@ public abstract class AbstractCanalListener<EVENT extends AbstractCanalEvent> im
     @Override
     public void afterPropertiesSet() {
         mysqlTypeElasticsearchTypeMapping = Maps.newHashMap();
+        mysqlTypeElasticsearchTypeMapping = Maps.newHashMap();
         mysqlTypeElasticsearchTypeMapping.put("char", data -> data);
-        mysqlTypeElasticsearchTypeMapping.put("varchar", data -> data);
         mysqlTypeElasticsearchTypeMapping.put("text", data -> data);
         mysqlTypeElasticsearchTypeMapping.put("blob", data -> data);
-        mysqlTypeElasticsearchTypeMapping.put("bit", Integer::valueOf);
         mysqlTypeElasticsearchTypeMapping.put("int", Long::valueOf);
-        mysqlTypeElasticsearchTypeMapping.put("smallint", Integer::valueOf);
-        mysqlTypeElasticsearchTypeMapping.put("bigint", Long::valueOf);
         mysqlTypeElasticsearchTypeMapping.put("date", data -> LocalDateTime.parse(data, FORMATTER));
-        mysqlTypeElasticsearchTypeMapping.put("datetime", data -> LocalDateTime.parse(data, FORMATTER));
-        mysqlTypeElasticsearchTypeMapping.put("timestamp", data -> LocalDateTime.parse(data, FORMATTER));
         mysqlTypeElasticsearchTypeMapping.put("time", data -> LocalDateTime.parse(data, FORMATTER));
         mysqlTypeElasticsearchTypeMapping.put("float", Double::valueOf);
         mysqlTypeElasticsearchTypeMapping.put("double", Double::valueOf);
@@ -112,6 +109,15 @@ public abstract class AbstractCanalListener<EVENT extends AbstractCanalEvent> im
 
     String getPrimaryKey(String database, String table) {
         return Optional.ofNullable(mappingProperties.get(database, table)).map(IndexProperties::getPrimaryKey).orElse(null);
+    }
+
+    IElasticsearchService getElasticsearchService(String database, String table) {
+        String processBeanName = Optional.ofNullable(mappingProperties.get(database, table)).map(IndexProperties::getProcessBeanName).orElse(null);
+        IElasticsearchService elasticsearchService = BeanKit.getBean(processBeanName, IElasticsearchService.class);
+        if (Objects.isNull(elasticsearchService)) {
+            throw new RuntimeException(String.format("没有找到对应的 bean: %s", processBeanName));
+        }
+        return elasticsearchService;
     }
 
     /**

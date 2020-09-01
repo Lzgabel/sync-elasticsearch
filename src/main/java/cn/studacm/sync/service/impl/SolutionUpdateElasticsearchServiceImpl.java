@@ -4,11 +4,10 @@ import cn.studacm.sync.document.CodeDocument;
 import cn.studacm.sync.entity.Code;
 import cn.studacm.sync.entity.Solution;
 import cn.studacm.sync.entity.User;
-import cn.studacm.sync.service.IElasticsearchService;
+import cn.studacm.sync.service.ICodeService;
 import cn.studacm.sync.service.ISolutionService;
 import cn.studacm.sync.service.IUserService;
 import cn.studacm.sync.util.JsonUtil;
-import io.searchbox.client.JestClient;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.Index;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +30,8 @@ import java.util.Objects;
  * @since 1.0.0
  */
 @Slf4j
-@Service
-public class ElasticsearchServiceImpl implements IElasticsearchService {
+@Service("solution-update")
+public class SolutionUpdateElasticsearchServiceImpl extends AbstractElasticsearchService {
 
     @Autowired
     IUserService userService;
@@ -41,7 +40,7 @@ public class ElasticsearchServiceImpl implements IElasticsearchService {
     ISolutionService solutionService;
 
     @Autowired
-    JestClient jestClient;
+    ICodeService codeService;
 
     @Override
     public void insertById(String index, String type, String id, Map<String, Object> dataMap) {
@@ -60,38 +59,18 @@ public class ElasticsearchServiceImpl implements IElasticsearchService {
 
     @Override
     public void batchInsertById(String index, String type, List<Map<String, Object>> dataList) {
-        Bulk.Builder builder = new Bulk.Builder().defaultIndex(index).defaultType(type);
-        for (Map<String, Object> data: dataList) {
-
-            CodeDocument document = getDocument(data);
-            if (Objects.nonNull(document)) {
-                builder.addAction(new Index.Builder(document).index(index).type(type).build());
-            }
-        }
-        try {
-            jestClient.execute(builder.build());
-        } catch (Exception e) {
-            log.error("批量同步异常", e);
-        }
-    }
-
-    @Override
-    public void update(String index, String type, String id, Map<String, Object> dataMap) {
-        this.insertById(index, type, id, dataMap);
-    }
-
-    @Override
-    public void deleteById(String index, String type, String id) {
-        // TODO
+        // do nothing
     }
 
     private CodeDocument getDocument(Map<String, Object> data) {
-        Code code = JsonUtil.fromJson(data, Code.class);
+        Object subTime = data.get("subTime");
+        Solution solution = JsonUtil.fromJson(data, Solution.class);
 
-        Solution solution = solutionService.getById(code.getSolutionId());
-        if (Objects.isNull(solution)) {
+        Code code = codeService.getBySolutionId(solution.getSolutionId());
+        if (Objects.isNull(code)) {
             return null;
         }
+
         User user = userService.getById(solution.getUserId());
         if (Objects.isNull(user)) {
             return null;
@@ -100,14 +79,7 @@ public class ElasticsearchServiceImpl implements IElasticsearchService {
         CodeDocument codeDocument = new CodeDocument();
         BeanUtils.copyProperties(code, codeDocument);
         BeanUtils.copyProperties(solution, codeDocument);
-        BeanUtils.copyProperties(user, codeDocument);
-        if (StringUtils.isNotBlank(code.getCodeContent())) {
-            if (StringUtils.contains(code.getCodeContent(), "\r")) {
-                codeDocument.setCodeLines(StringUtils.countMatches(code.getCodeContent(), "\r\n") + 1);
-            } else {
-                codeDocument.setCodeLines(StringUtils.countMatches(code.getCodeContent(), "\n") + 1);
-            }
-        }
+
         return codeDocument;
     }
 }

@@ -9,15 +9,18 @@ import cn.studacm.sync.util.TimeUtil;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 〈功能简述〉<br>
@@ -37,13 +40,17 @@ public class CountController {
 
     private static final LocalDate BEGIN_DATE = TimeUtil.parseLocalDate("2006-01-01 00:00:00");
 
-    @GetMapping
-    public Response<List<CountResponse>> count() {
+    @GetMapping("/self")
+    public Response<CountDTO> countBySelf(@RequestBody @Validated CountRequest request) {
+        return Response.success(countService.count(request));
+    }
 
+    @GetMapping
+    public ModelAndView index(ModelMap model, ModelAndView view) {
         LocalDate now = LocalDate.now();
         long diff = TimeUtil.diffYears(BEGIN_DATE, now);
 
-        List<CountResponse> res = Lists.newArrayList();
+        List<CountDTO> res = Lists.newArrayList();
         for (int i = 0; i <= diff; i++) {
             CountRequest request = new CountRequest();
             LocalDate date = TimeUtil.plusYears(TimeUtil.toDate(BEGIN_DATE), i);
@@ -52,15 +59,25 @@ public class CountController {
             request.setBegin(TimeUtil.toDate(firstDayOfYear));
             request.setEnd(TimeUtil.toDate(lastDayOfYear));
             CountDTO countDTO = countService.count(request);
-            CountResponse response = new CountResponse();
-            BeanUtils.copyProperties(countDTO, response);
-            res.add(response);
+            res.add(countDTO);
         }
-        return Response.success(res);
-    }
 
-    @GetMapping("/self")
-    public Response<CountDTO> countBySelf(@RequestBody @Validated CountRequest request) {
-        return Response.success(countService.count(request));
+        List<String> dataAxis = res.stream()
+                .map(CountDTO::getBegin)
+                .map(TimeUtil::toLocalDate)
+                .map(TimeUtil::getYear)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+
+        List<String> data = res.stream()
+                .map(CountDTO::getCodeLines)
+                //.map(i -> i/10000)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+
+        model.addAttribute("dataAxis", dataAxis.toArray());
+        model.addAttribute("data", data.toArray());
+        view.setViewName("index");
+        return view;
     }
 }

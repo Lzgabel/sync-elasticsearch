@@ -24,9 +24,6 @@ import java.util.Map;
 @Component
 public class UpdateCanalListener extends AbstractCanalListener<UpdateCanalEvent> {
 
-    @Resource
-    private IElasticsearchService IElasticsearchService;
-
     @Override
     protected void doSync(String database, String table, String index, String type, RowData rowData) {
         List<Column> columns = rowData.getAfterColumnsList();
@@ -38,7 +35,8 @@ public class UpdateCanalListener extends AbstractCanalListener<UpdateCanalEvent>
         }
         log.debug("update_column_id_info update主键id,database=" + database + ",table=" + table + ",id=" + idColumn.getValue());
         Map<String, Object> dataMap = parseColumnsToMap(columns);
-        IElasticsearchService.update(index, type, idColumn.getValue(), dataMap);
+        IElasticsearchService elasticsearchService = getElasticsearchService(database, table);
+        elasticsearchService.update(index, type, idColumn.getValue(), dataMap);
         log.debug("update_es_info 同步es插入操作成功！database=" + database + ",table=" + table + ",data=" + dataMap);
     }
 }

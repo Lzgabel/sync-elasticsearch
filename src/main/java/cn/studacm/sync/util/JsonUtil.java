@@ -5,11 +5,19 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +41,11 @@ public class JsonUtil {
     static {
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         OBJECT_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_FORMAT)));
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        OBJECT_MAPPER.registerModule(javaTimeModule);
         OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(DATE_FORMAT));
         OBJECT_MAPPER.setSerializationInclusion(Include.NON_NULL);
     }
@@ -86,7 +99,8 @@ public class JsonUtil {
      public static <T> T fromJson(Map<String, Object> data, Class<T> type) {
          T rst;
          try {
-             rst = OBJECT_MAPPER.readValue(toJson(data), type);
+             String s = toJson(data);
+             rst = OBJECT_MAPPER.readValue(s, type);
          } catch (Exception e) {
              logger.error("Json串转换成对象出错：{}", data);
              throw new RuntimeException("Json串转换成对象出错!", e);

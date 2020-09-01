@@ -14,3 +14,9 @@ index:
         index: code_index
         type: _doc
         primary-key: code_id
+        process-bean-name: code-insert
+      solution:
+        index: code_index
+        type: _doc
+        primary-key: solution_id
+        process-bean-name: solution-update
