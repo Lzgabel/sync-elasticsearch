@@ -5,7 +5,7 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>大数据可视化</title>
+    <title>数据可视化</title>
     <link type="text/css" href="/css/public.css" rel="stylesheet">
     <link type="text/css" href="/css/icon.css" rel="stylesheet">
     <link type="text/css" href="/css/index.css" rel="stylesheet">
@@ -25,7 +25,7 @@
 
 <body>
 <div class="bg">
-    <div class="title">大数据可视化</div>
+    <div class="title">数据可视化</div>
     <div class="leftMain">
         <div class="leftMain_top">
             <div class="leftMain_topIn">
