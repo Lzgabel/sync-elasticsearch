@@ -158,7 +158,7 @@
                 <!-- 环境打包工具 -->
                 <groupId>com.juvenxu.portable-config-maven-plugin</groupId>
                 <artifactId>portable-config-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.0-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <goals>
