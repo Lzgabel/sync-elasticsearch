@@ -1,10 +1,7 @@
 package cn.studacm.sync.dto;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.util.Date;
 
 /**
  * 〈功能简述〉<br>
@@ -25,17 +22,57 @@ public class CountDTO {
     private Long codeLines;
 
     /**
-     * 用户 id
+     * user id
      */
-    private String userId;
+    private Integer userId;
 
     /**
-     * 开始时间
+     * username
      */
-    private Date begin;
+    private String userName;
 
     /**
-     * 结束时间
+     * nickname
      */
-    private Date end;
+    private String nickName;
+
+    /**
+     * email
+     */
+    private String email;
+
+    /**
+     * school
+     */
+    private String school;
+
+    /**
+     * sex
+     */
+    private String sex;
+
+    /**
+     * college
+     */
+    private String college;
+
+    /**
+     * major
+     */
+    private String major;
+
+    /**
+     * grade
+     */
+    private String grade;
+
+    /**
+     * class
+     */
+    private String clazz;
+
+    /**
+     * 时间
+     */
+    private String date;
 }

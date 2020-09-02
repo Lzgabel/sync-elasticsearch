@@ -1,26 +1,44 @@
 package cn.studacm.sync.service.impl;
 
+import cn.studacm.sync.document.CodeDocument;
 import cn.studacm.sync.dto.CountDTO;
+import cn.studacm.sync.entity.User;
 import cn.studacm.sync.model.request.CountRequest;
 import cn.studacm.sync.service.ICountService;
 import cn.studacm.sync.util.TimeUtil;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
+import io.searchbox.core.search.aggregation.DateHistogramAggregation;
+import io.searchbox.core.search.aggregation.MetricAggregation;
 import io.searchbox.core.search.aggregation.SumAggregation;
+import io.searchbox.core.search.aggregation.TermsAggregation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.reindex.ScrollableHitSource;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.BucketOrder;
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 〈功能简述〉<br>
@@ -41,6 +59,11 @@ public class CountServiceImpl implements ICountService {
     public static final String INDEX_NAME = "code_index";
 
     /**
+     * 索引名称
+     */
+    public static final String USER_INDEX_NAME = "user_index";
+
+    /**
      * 索引类型
      */
     public static final String TYPE_NAME = "_doc";
@@ -49,39 +72,184 @@ public class CountServiceImpl implements ICountService {
     JestClient jestClient;
 
     @Override
-    public CountDTO count(CountRequest request) {
+    public List<CountDTO> count(CountRequest request) {
 
+        SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
+        DateHistogramAggregationBuilder dateGroup = AggregationBuilders.dateHistogram("group")
+                .field("subTime")
+                .calendarInterval(DateHistogramInterval.YEAR)
+                .format("yyyy")
+                .minDocCount(0);
+        AggregationBuilder aggregationBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
+        dateGroup.subAggregation(aggregationBuilder);
+        String query = searchSourceBuilder.aggregation(dateGroup).toString();
+
+        Search.Builder builder = new Search.Builder(query).addIndex(INDEX_NAME).addType(TYPE_NAME);
+
+        List<CountDTO> res = Lists.newArrayList();
+        try {
+            SearchResult result = jestClient.execute(builder.build());
+            MetricAggregation aggregations = result.getAggregations();
+            List<DateHistogramAggregation.DateHistogram> group = aggregations.getDateHistogramAggregation("group").getBuckets();
+            group.forEach(v -> {
+                CountDTO countDTO = new CountDTO();
+                String date = v.getTimeAsString();
+                countDTO.setDate(date);
+                SumAggregation codeLines = v.getSumAggregation("codeLines");
+                countDTO.setCodeLines(codeLines.getSum().longValue());
+                res.add(countDTO);
+            });
+        } catch (IOException e) {
+            log.error("查询失败", e);
+        }
+
+        return res;
+    }
+
+    private SearchSourceBuilder buildSearchBuilder(CountRequest request) {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                .must(QueryBuilders.rangeQuery("subTime")
-                        .gte(TimeUtil.dateToTimestamp(request.getBegin()))
-                        .lte(TimeUtil.dateToTimestamp(request.getEnd())));
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        if (StringUtils.isNotBlank(request.getUserId())) {
-            boolQueryBuilder.must(QueryBuilders.termQuery("userId", request.getUserId()));
+        boolean range = false;
+        RangeQueryBuilder rangeQuery = QueryBuilders.rangeQuery("subTime");
+        if (Objects.nonNull(request.getBegin())) {
+            rangeQuery.gte(TimeUtil.dateToTimestamp(request.getBegin()));
+            range = true;
+        }
+
+        if (Objects.nonNull(request.getEnd())) {
+            rangeQuery.lte(TimeUtil.dateToTimestamp(request.getEnd()));
+            range = true;
+        }
+        if (range) {
+            boolQueryBuilder.must(rangeQuery);
+        }
+
+        if (StringUtils.isNotBlank(request.getUsername())) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("userName", request.getUsername()));
         }
 
         if (Objects.nonNull(request.getResult())) {
             boolQueryBuilder.must(QueryBuilders.termQuery("result", request.getResult()));
         }
-
         searchSourceBuilder.query(boolQueryBuilder);
-        AggregationBuilder aggregationBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
-        String query = searchSourceBuilder.aggregation(aggregationBuilder).toString();
+
+        return searchSourceBuilder;
+    }
+
+    @Override
+    public Map<Integer, CountDTO> groupByResult(CountRequest request) {
+        SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
+
+        AggregationBuilder aggregationGroupByBuilder = AggregationBuilders.terms("group").field("result");
+        AggregationBuilder aggregationSubBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
+        aggregationGroupByBuilder.subAggregation(aggregationSubBuilder);
+        String query = searchSourceBuilder.aggregation(aggregationGroupByBuilder).toString();
 
         Search.Builder builder = new Search.Builder(query).addIndex(INDEX_NAME).addType(TYPE_NAME);
-
-        CountDTO countDTO = new CountDTO();
-        BeanUtils.copyProperties(request, countDTO);
+        Map<Integer, CountDTO> res = Maps.newHashMap();
         try {
             SearchResult result = jestClient.execute(builder.build());
-            SumAggregation sumAggregation = result.getAggregations().getSumAggregation("codeLines");
-            Double sum = sumAggregation.getSum();
-            countDTO.setCodeLines(sum.longValue());
+            MetricAggregation aggregations = result.getAggregations();
+            TermsAggregation group = aggregations.getTermsAggregation("group");
+            group.getBuckets().forEach(v -> {
+                SumAggregation codeLines = v.getSumAggregation("codeLines");
+                CountDTO countDTO = new CountDTO().setCodeLines(codeLines.getSum().longValue());
+                res.put(Integer.valueOf(v.getKey()), countDTO);
+            });
         } catch (IOException e) {
             log.error("查询失败", e);
         }
+        return res;
+    }
 
-        return countDTO;
+    @Override
+    public List<CountDTO> ranklist(CountRequest request) {
+        SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
+        AggregationBuilder aggregationSubBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
+        searchSourceBuilder.size(10);
+        AggregationBuilder groupBy = AggregationBuilders.terms("group")
+                .field("userId").subAggregation(aggregationSubBuilder)
+                // 根据 code line 前10个
+                .order(BucketOrder.aggregation("codeLines", false)).size(10);
+
+        String query = searchSourceBuilder.aggregation(groupBy).toString();
+
+
+        Search.Builder builder = new Search.Builder(query).addIndex(INDEX_NAME).addType(TYPE_NAME);
+        List<CountDTO> res = Lists.newArrayList();
+        try {
+            SearchResult result = jestClient.execute(builder.build());
+            MetricAggregation aggregations = result.getAggregations();
+            TermsAggregation group = aggregations.getTermsAggregation("group");
+            List<String> userIdList = group.getBuckets().stream().map(TermsAggregation.Entry::getKey).collect(Collectors.toList());
+
+            List<SearchResult.Hit<User, Void>> hits = getUser(userIdList);
+
+            group.getBuckets().forEach(v -> {
+                String userId = v.getKey();
+                SumAggregation codeLines = v.getSumAggregation("codeLines");
+                Optional<User> first = hits.stream().map(i -> i.source).filter(i -> StringUtils.equals(i.getUserId().toString(), userId)).findFirst();
+                if (first.isPresent()) {
+                    CountDTO countDTO = new CountDTO();
+                    BeanUtils.copyProperties(first.get(), countDTO);
+                    countDTO.setCodeLines(codeLines.getSum().longValue());
+                    res.add(countDTO);
+                }
+            });
+
+        } catch (IOException e) {
+            log.error("查询失败", e);
+        }
+        return res;
+    }
+
+    @Override
+    public List<CountDTO> linelist(CountRequest request) {
+        SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
+        DateHistogramAggregationBuilder dateGroup = AggregationBuilders.dateHistogram("group")
+                .field("subTime")
+                .calendarInterval(DateHistogramInterval.MONTH)
+                .format("yyyy-MM")
+                .minDocCount(0);
+        AggregationBuilder aggregationBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
+        dateGroup.subAggregation(aggregationBuilder);
+        String query = searchSourceBuilder.aggregation(dateGroup).toString();
+
+
+        Search.Builder builder = new Search.Builder(query).addIndex(INDEX_NAME).addType(TYPE_NAME);
+        List<CountDTO> res = Lists.newArrayList();
+        try {
+            SearchResult result = jestClient.execute(builder.build());
+            MetricAggregation aggregations = result.getAggregations();
+            TermsAggregation group = aggregations.getTermsAggregation("group");
+
+            group.getBuckets().forEach(v -> {
+                SumAggregation codeLines = v.getSumAggregation("codeLines");
+                    CountDTO countDTO = new CountDTO();
+                    countDTO.setDate(v.getKey());
+                    countDTO.setCodeLines(codeLines.getSum().longValue());
+                    res.add(countDTO);
+            });
+
+        } catch (IOException e) {
+            log.error("查询失败", e);
+        }
+        return res;
+    }
+
+    private List<SearchResult.Hit<User, Void>> getUser(List<String> userIdList) {
+        SearchSourceBuilder searchSourceBuilder  = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder().filter(QueryBuilders.termsQuery("userId", userIdList));
+        searchSourceBuilder.query(boolQueryBuilder);
+        // 查询用户信息
+        Search.Builder builder = new Search.Builder(searchSourceBuilder.toString()).addIndex(USER_INDEX_NAME).addType(TYPE_NAME);
+        SearchResult execute = null;
+        try {
+            execute = jestClient.execute(builder.build());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return execute.getHits(User.class);
     }
 }

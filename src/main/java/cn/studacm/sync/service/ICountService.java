@@ -23,5 +23,28 @@ public interface ICountService {
      * @param request
      * @return
      */
-    CountDTO count(CountRequest request);
+    List<CountDTO> count(CountRequest request);
+
+
+    /**
+     * 根据评测结果进行分组
+     * @param request
+     * @return
+     */
+    Map<Integer, CountDTO> groupByResult(CountRequest request);
+
+    /**
+     * 排行榜
+     * @param request
+     * @return
+     */
+    List<CountDTO> ranklist(CountRequest request);
+
+
+    /**
+     * 近6个月提交量折线图统计
+     * @param request
+     * @return
+     */
+    List<CountDTO> linelist(CountRequest request);
 }

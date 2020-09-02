@@ -20,3 +20,8 @@ index:
         type: _doc
         primary-key: solution_id
         process-bean-name: solution-update
+      user:
+        index: user_index
+        type: _doc
+        primary-key: user_id
+        process-bean-name: user-insert

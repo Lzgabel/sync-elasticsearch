@@ -4,6 +4,7 @@ import cn.studacm.sync.entity.base.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.searchbox.annotations.JestId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -21,6 +22,7 @@ public class Code  {
 
     private static final long serialVersionUID = 1L;
 
+    @JestId
     @TableId(value = "code_id", type = IdType.AUTO)
     private Integer codeId;
 

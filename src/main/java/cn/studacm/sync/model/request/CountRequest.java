@@ -33,9 +33,9 @@ public class CountRequest {
     private Date end;
 
     /**
-     * user id
+     * username
      */
-    private String userId;
+    private String username;
 
     /**
      * result

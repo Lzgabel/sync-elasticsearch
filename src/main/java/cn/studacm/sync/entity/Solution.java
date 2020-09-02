@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.searchbox.annotations.JestId;
 import lombok.Data;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ public class Solution {
 
     private static final long serialVersionUID = 1L;
 
+    @JestId
     @TableId(value = "solution_id", type = IdType.AUTO)
     private Integer solutionId;
 

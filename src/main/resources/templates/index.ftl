@@ -249,7 +249,7 @@
                                         <div class="liIn_line">
                                             <div class="line_lineIn" style="width:98.5%;"></div>
                                         </div>
-                                        <p class="num">98.5%</p>
+                                        <p class="num"></p>
                                     </div>
                                 </li>
                                 <li>
@@ -292,16 +292,6 @@
                                         <p class="num">22.5%</p>
                                     </div>
                                 </li>
-                                <li>
-                                    <div class="liIn liIn6">
-                                        <div class="liIn_left"><span class="bot"></span><span class="zi">第六名</span>
-                                        </div>
-                                        <div class="liIn_line">
-                                            <div class="line_lineIn" style="width:10.5%;"></div>
-                                        </div>
-                                        <p class="num">10.5%</p>
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -315,7 +305,7 @@
         <div class="leftMain_middle">
             <div class="leftMain_middle_left">
                 <div class="leftMain_middle_leftIn">
-                    <h3>这里是标题</h3>
+                    <h3>近6个月提交量</h3>
                     <div class="biaoge"
                          style="width: 100%; height: 25vh; -webkit-tap-highlight-color: transparent; user-select: none; position: relative;"
                          id="chartmain_zhe" _echarts_instance_="ec_1598945994794">
@@ -328,7 +318,6 @@
                     <script type="text/javascript">
                         //window.onload = function (){
                         //指定图表的配置项和数据
-
                         option = {
                             title: {
                                 text: ''
@@ -342,7 +331,7 @@
                                     fontSize: 12,
                                 },
                                 right: '10%',
-                                data: ['折线一', '折线二']
+                                data: ['折线一']
                             },
                             grid: {
                                 x: 40,
@@ -378,7 +367,7 @@
                                         color: '#fff',
                                     }
                                 },
-                                data: ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00']
+                                data: [<#list dateList as item>${item?date("MM/dd/yyyy")}, </#list>]
                             },
                             yAxis: {
                                 type: 'value',
@@ -406,7 +395,7 @@
                                     name: '折线一',
                                     type: 'line',
                                     stack: '总量',
-                                    data: [280, 102, 191, 134, 390, 230, 210],
+                                    data: [<#list lineData as item>${item}, </#list>],
                                     itemStyle: {
                                         normal: {
                                             color: "#0efdff",//折线点的颜色
@@ -416,13 +405,7 @@
                                             }
                                         },
                                     }
-                                },
-                                {
-                                    name: '折线二',
-                                    type: 'line',
-                                    stack: '总量',
-                                    data: [100, 132, 131, 234, 290, 330, 110]
-                                },
+                                }
                             ]
                         };
                         //获取dom容器
@@ -548,18 +531,18 @@
                                 selectedMode: 'single',
                                 data: [
                                     <#list pies as map>
-                                        {
-                                            <#list map?keys as itemKey>
+                                    {
+                                        <#list map?keys as itemKey>
 
-                                            <#if itemKey="name">
-                                            'name': "${map[itemKey]}",
-                                            </#if>
-                                            <#if itemKey="value">
-                                            'value': ${map[itemKey]}
-                                            </#if>
+                                        <#if itemKey="name">
+                                        'name': "${map[itemKey]}",
+                                        </#if>
+                                        <#if itemKey="value">
+                                        'value': ${map[itemKey]}
+                                        </#if>
 
-                                            </#list>
-                                        },
+                                        </#list>
+                                    },
                                     </#list>
                                 ],
                                 emphasis: {
@@ -588,102 +571,27 @@
         </div>
         <div class="rightMain_bottom">
             <div class="rightMain_bottomIn">
-                <h3>这里是标题</h3>
+                <h3>排行榜</h3>
                 <div class="biaoge biaoge_list" style="width:100%; height:36vh">
                     <div class="biaoge_listIn">
                         <ul class="ul_title">
-                            <li>用户</li>
-                            <li>类型号</li>
-                            <li>类别一</li>
-                            <li>类别二</li>
-                            <li>类别三</li>
+                            <li>用户名</li>
+                            <li>昵称</li>
+<#--                            <li>专业</li>-->
+<#--                            <li>班级</li>-->
+                            <li>总提交量</li>
                         </ul>
                         <div class="ul_list">
                             <div class="ul_listIn">
+                                <#list ranklist as item>
                                 <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>11</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
+                                    <li><#if item.userName??>${item.userName}</#if></li>
+                                    <li><#if item.nickName??>${item.nickName}</#if></li>
+<#--                                    <li><#if item.major??>${item.major}</#if></li>-->
+<#--                                    <li><#if item.clazz??>${item.clazz}</#if></li>-->
+                                    <li><#if item.codeLines??>${item.codeLines}</#if></li>
                                 </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>12</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>13</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>14</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>15</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>16</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>11</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>12</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>13</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>14</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>15</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
-                                <ul class="ul_con">
-                                    <li>张三</li>
-                                    <li>16</li>
-                                    <li>类别一</li>
-                                    <li>类别二</li>
-                                    <li>类别三</li>
-                                </ul>
+                                </#list>
                             </div>
                         </div>
                     </div>
