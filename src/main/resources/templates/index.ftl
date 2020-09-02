@@ -23,8 +23,8 @@
 </head>
 
 
-<body>
-<div class="bg">
+<body class="bg">
+<div>
     <div class="title">数据可视化</div>
     <div class="leftMain">
         <div class="leftMain_top">
@@ -249,7 +249,7 @@
                                         <div class="liIn_line">
                                             <div class="line_lineIn" style="width:98.5%;"></div>
                                         </div>
-                                        <p class="num"></p>
+                                        <p class="num">98.5%</p>
                                     </div>
                                 </li>
                                 <li>
@@ -334,10 +334,10 @@
                                 data: ['折线一']
                             },
                             grid: {
-                                x: 40,
-                                y: 40,
-                                x2: 20,
-                                y2: 20,
+                                left: '3%',
+                                right: '6%',
+                                bottom: '3%',
+                                containLabel: true
                             },
                             toolbox: {
                                 feature: {
@@ -367,11 +367,11 @@
                                         color: '#fff',
                                     }
                                 },
-                                data: [<#list dateList as item>${item?date("MM/dd/yyyy")}, </#list>]
+                                data: [<#list dateList as item>"${item}", </#list>]
                             },
                             yAxis: {
                                 type: 'value',
-
+                                name: '单位：行',
                                 axisLine: {
                                     show: true,
                                     symbol: ['none', 'arrow'],
@@ -571,26 +571,26 @@
         </div>
         <div class="rightMain_bottom">
             <div class="rightMain_bottomIn">
-                <h3>排行榜</h3>
+                <h3>排行榜(前20)</h3>
                 <div class="biaoge biaoge_list" style="width:100%; height:36vh">
                     <div class="biaoge_listIn">
                         <ul class="ul_title">
                             <li>用户名</li>
                             <li>昵称</li>
-<#--                            <li>专业</li>-->
-<#--                            <li>班级</li>-->
-                            <li>总提交量</li>
+                            <#--                            <li>专业</li>-->
+                            <#--                            <li>班级</li>-->
+                            <li>总提交量(行)</li>
                         </ul>
                         <div class="ul_list">
                             <div class="ul_listIn">
                                 <#list ranklist as item>
-                                <ul class="ul_con">
-                                    <li><#if item.userName??>${item.userName}</#if></li>
-                                    <li><#if item.nickName??>${item.nickName}</#if></li>
-<#--                                    <li><#if item.major??>${item.major}</#if></li>-->
-<#--                                    <li><#if item.clazz??>${item.clazz}</#if></li>-->
-                                    <li><#if item.codeLines??>${item.codeLines}</#if></li>
-                                </ul>
+                                    <ul class="ul_con">
+                                        <li><#if item.userName??>${item.userName}</#if></li>
+                                        <li><#if item.nickName??>${item.nickName}</#if></li>
+                                        <#--                                    <li><#if item.major??>${item.major}</#if></li>-->
+                                        <#--                                    <li><#if item.clazz??>${item.clazz}</#if></li>-->
+                                        <li><#if item.codeLines??>${item.codeLines}</#if></li>
+                                    </ul>
                                 </#list>
                             </div>
                         </div>
@@ -604,7 +604,7 @@
             </div>
         </div>
     </div>
-    <div style="clear:both;"></div>
+    <#-- <div style="clear:both;"></div>-->
 </div>
 <!--数字增长累加动画-->
 <script src="/js/jquery-1.11.0.min.js" type="text/javascript"></script>

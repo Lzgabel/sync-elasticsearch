@@ -79,7 +79,7 @@ public class CountController {
         request.setUsername(userName);
         List<CountDTO> lineList = countService.linelist(request);
 
-        List<Long> dateList = lineList.stream().map(CountDTO::getDate).map(i -> Long.valueOf(i)).collect(Collectors.toList());
+        List<String> dateList = lineList.stream().map(CountDTO::getDate).collect(Collectors.toList());
         List<Long> lineData = lineList.stream().map(CountDTO::getCodeLines).collect(Collectors.toList());
 
         model.addAttribute("dateList", dateList);

@@ -1,6 +1,5 @@
 package cn.studacm.sync.service.impl;
 
-import cn.studacm.sync.document.CodeDocument;
 import cn.studacm.sync.dto.CountDTO;
 import cn.studacm.sync.entity.User;
 import cn.studacm.sync.model.request.CountRequest;
@@ -20,14 +19,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
-import org.elasticsearch.index.reindex.ScrollableHitSource;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.BucketOrder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,11 +163,11 @@ public class CountServiceImpl implements ICountService {
     public List<CountDTO> ranklist(CountRequest request) {
         SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
         AggregationBuilder aggregationSubBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
-        searchSourceBuilder.size(10);
+        searchSourceBuilder.size(20);
         AggregationBuilder groupBy = AggregationBuilders.terms("group")
                 .field("userId").subAggregation(aggregationSubBuilder)
-                // 根据 code line 前10个
-                .order(BucketOrder.aggregation("codeLines", false)).size(10);
+                // 根据 code line 前20个
+                .order(BucketOrder.aggregation("codeLines", false)).size(20);
 
         String query = searchSourceBuilder.aggregation(groupBy).toString();
 
@@ -226,10 +222,10 @@ public class CountServiceImpl implements ICountService {
 
             group.getBuckets().forEach(v -> {
                 SumAggregation codeLines = v.getSumAggregation("codeLines");
-                    CountDTO countDTO = new CountDTO();
-                    countDTO.setDate(v.getKey());
-                    countDTO.setCodeLines(codeLines.getSum().longValue());
-                    res.add(countDTO);
+                CountDTO countDTO = new CountDTO();
+                countDTO.setDate(v.getKeyAsString());
+                countDTO.setCodeLines(codeLines.getSum().longValue());
+                res.add(countDTO);
             });
 
         } catch (IOException e) {
@@ -239,7 +235,7 @@ public class CountServiceImpl implements ICountService {
     }
 
     private List<SearchResult.Hit<User, Void>> getUser(List<String> userIdList) {
-        SearchSourceBuilder searchSourceBuilder  = new SearchSourceBuilder();
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder().filter(QueryBuilders.termsQuery("userId", userIdList));
         searchSourceBuilder.query(boolQueryBuilder);
         // 查询用户信息

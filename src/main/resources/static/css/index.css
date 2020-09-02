@@ -5,7 +5,8 @@
     width:100%;
     min-height:100vh;
     background:url(../images/bg2.jpg) no-repeat;
-    background-size: cover;
+	background-size: 100% 100%;
+    /*background-size: cover;*/
     padding-top:0rem;
 	padding:0rem 0.2rem;
 
@@ -73,6 +74,7 @@
 
 .leftMain_top{
 	width:100%;
+	padding-top:0.1rem;
 	padding-bottom:0.1rem;}
 .leftMain_top ul{
 	display:flex;
