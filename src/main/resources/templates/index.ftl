@@ -4,7 +4,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OJ 提交数据统计</title>
-<link type="text/css" rel="stylesheet" href="/css/style.css">
+<link type="text/css" rel="stylesheet" href="/loc/css/style.css">
     <style>
         a {
             text-decoration: none;
@@ -206,7 +206,7 @@
     </#list>
     </section>
 </#list>
-<script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/TweenMax.min.js"></script>
+<script type="text/javascript" src="/loc/js/jquery.min.js"></script>
+<script type="text/javascript" src="/loc/js/TweenMax.min.js"></script>
 
 </body></html>
