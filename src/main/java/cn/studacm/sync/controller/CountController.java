@@ -41,7 +41,7 @@ public class CountController {
     @Autowired
     ICountService countService;
 
-    private static final LocalDate BEGIN_DATE = TimeUtil.parseLocalDate("2006-01-01 00:00:00");
+    private static final LocalDate BEGIN_DATE = TimeUtil.parseLocalDate("2009-01-01 00:00:00");
 
     @GetMapping("/self")
     public Response<CountDTO> countBySelf(@RequestBody @Validated CountRequest request) {
@@ -54,6 +54,7 @@ public class CountController {
         // 年提交量柱状图统计
         // 年提交量统计 -- begin
         CountRequest param = new CountRequest();
+        param.setBegin(TimeUtil.toDate(BEGIN_DATE));
         List<CountDTO> res = countService.count(param);
 
         List<String> dataAxis = res.stream()
@@ -62,7 +63,7 @@ public class CountController {
 
         List<String> data = res.stream()
                 .map(CountDTO::getCodeLines)
-                //.map(i -> i/10000)
+                .map(i -> i/10000)
                 .map(String::valueOf)
                 .collect(Collectors.toList());
 

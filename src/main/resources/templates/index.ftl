@@ -70,7 +70,7 @@
         <div class="card__count-container">
             <div class="card__count-text">
                 <!-- freemarker 转换为数字后除以10000 -->
-                <span class="card__count-text--big">${data[i+v]?number/10000}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> 万
             </div>
         </div>
         <div class="card__stuff-container">
@@ -97,7 +97,7 @@
         </div>
         <div class="card__count-container">
             <div class="card__count-text">
-                <span class="card__count-text--big">${data[i+v]?number/10000}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> 万
             </div>
         </div>
         <div class="card__stuff-container">
@@ -129,7 +129,7 @@
         </div>
         <div class="card__count-container">
             <div class="card__count-text">
-                <span class="card__count-text--big">${data[i+v]?number/10000}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> 万
             </div>
         </div>
         <div class="card__stuff-container">
@@ -163,7 +163,7 @@
         </div>
         <div class="card__count-container">
             <div class="card__count-text">
-                <span class="card__count-text--big">${data[i+v]?number/10000}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> 万
             </div>
         </div>
         <div class="card__stuff-container">
@@ -195,7 +195,7 @@
         </div>
         <div class="card__count-container">
             <div class="card__count-text">
-                <span class="card__count-text--big">${data[i+v]?number/10000}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> 万
             </div>
         </div>
         <div class="card__stuff-container">
