@@ -247,9 +247,15 @@
                                         <div class="liIn_left"><span class="bot"></span><span class="zi">第一名</span>
                                         </div>
                                         <div class="liIn_line">
-                                            <div class="line_lineIn" style="width:98.5%;"></div>
+                                            <style type="text/css">
+                                                @-webkit-keyframes widthMove1 {
+                                                    0% {width:0%; }
+                                                    100% { width:50.5%; }
+                                                }
+                                            </style>
+                                            <div class="line_lineIn" style="width:50.5%;"></div>
                                         </div>
-                                        <p class="num">98.5%</p>
+                                        <p class="num">50.5%</p>
                                     </div>
                                 </li>
                                 <li>

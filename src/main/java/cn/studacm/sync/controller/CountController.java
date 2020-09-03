@@ -65,8 +65,15 @@ public class CountController {
         // 近6个月折线图统计
         lineCount(model, userName);
 
+        // 季度统计
+        quarterCount(model, userName);
+
         view.setViewName("index");
         return view;
+    }
+
+    private void quarterCount(ModelMap model, String userName) {
+
     }
 
     private void lineCount(ModelMap model, String userName) {
@@ -76,6 +83,12 @@ public class CountController {
 
         request.setBegin(TimeUtil.toDate(begin));
         request.setEnd(TimeUtil.toDate(end));
+
+        // TODO 近 6 个月
+//        LocalDate now = LocalDate.now();
+//
+//        request.setBegin(TimeUtil.toDate(now.minusMonths(6)));
+//        request.setEnd(TimeUtil.toDate(now));
         request.setUsername(userName);
         List<CountDTO> lineList = countService.linelist(request);
 

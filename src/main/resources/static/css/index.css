@@ -227,10 +227,10 @@
 .leftMain_middle .leftMain_middle_right .leftMain_middle_rightIn  .biaoge_pai ul li .liIn6 .liIn_line .line_lineIn{
 	background:#05d1fc;
 	-webkit-animation: widthMove6 2s ease-in-out ;}
-@-webkit-keyframes widthMove1 {
+/*@-webkit-keyframes widthMove1 {
 	 0% {width:0%; }
 	 100% { width:98.5%; }
-	 }
+	 }*/
 @-webkit-keyframes widthMove2 {
 	 0% {width:0%; }
 	 100% { width:88.5%; }
