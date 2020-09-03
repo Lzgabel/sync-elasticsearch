@@ -199,7 +199,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"><a href="./year/2013">  2013</a></div>
+            <div class="card__stuff-text"><a href="./year/2013">  ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
