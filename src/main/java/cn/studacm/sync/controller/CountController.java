@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 〈功能简述〉<br>
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
  */
 
 @RestController
-@RequestMapping("/count")
+@RequestMapping("/")
 public class CountController {
 
     @Autowired
@@ -48,8 +49,35 @@ public class CountController {
         return null;
     }
 
-    @GetMapping(value = {"/{username}", ""})
-    public ModelAndView index(ModelMap model,
+    @GetMapping
+    public ModelAndView index(ModelMap model, ModelAndView view) {
+        // 年提交量柱状图统计
+        // 年提交量统计 -- begin
+        CountRequest param = new CountRequest();
+        List<CountDTO> res = countService.count(param);
+
+        List<String> dataAxis = res.stream()
+                .map(CountDTO::getDate)
+                .collect(Collectors.toList());
+
+        List<String> data = res.stream()
+                .map(CountDTO::getCodeLines)
+                //.map(i -> i/10000)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+
+        List<Integer> step = IntStream.range(0, data.size()).filter(x -> x % 5 == 0).boxed().collect(Collectors.toList());
+
+        model.addAttribute("dataAxis", dataAxis.toArray());
+        model.addAttribute("step", step);
+        model.addAttribute("data", data.toArray());
+        // 年提交量统计 -- end
+        view.setViewName("index");
+        return view;
+    }
+
+    @GetMapping(value = {"/count/{username}", "/count"})
+    public ModelAndView detail(ModelMap model,
                               ModelAndView view,
                               @PathVariable(value = "username", required = false) String userName) {
 
