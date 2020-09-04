@@ -4,7 +4,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OJ 提交数据统计</title>
-<link type="text/css" rel="stylesheet" href="./css/style.css">
+<link type="text/css" rel="stylesheet" href="/loc/css/style.css">
     <style>
         a {
             text-decoration: none;
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"><a href="./year/2009"> ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"><a href="/loc/year/2009"> ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
@@ -95,7 +95,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"> <a href="./year/2010">  ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"> <a href="/loc/year/2010">  ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
@@ -127,7 +127,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"><a href="./year/2011">   ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"><a href="/loc/year/2011">   ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
@@ -161,7 +161,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"><a href="./year/2012">   ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"><a href="/loc/year/2012">   ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
@@ -193,14 +193,14 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"><a href="./year/2013">  ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"><a href="/loc/year/2013">  ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
     </#list>
     </section>
 </#list>
-<script type="text/javascript" src="./js/jquery.min.js"></script>
-<script type="text/javascript" src="./js/TweenMax.min.js"></script>
+<script type="text/javascript" src="/loc/js/jquery.min.js"></script>
+<script type="text/javascript" src="/loc/js/TweenMax.min.js"></script>
 
 </body></html>

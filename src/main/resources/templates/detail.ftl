@@ -6,14 +6,14 @@
     <meta name="keywords" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>数据可视化</title>
-    <link type="text/css" href="./css/public.css" rel="stylesheet">
-    <link type="text/css" href="./css/icon.css" rel="stylesheet">
-    <link type="text/css" href="./css/index.css" rel="stylesheet">
+    <link type="text/css" href="/loc/css/public.css" rel="stylesheet">
+    <link type="text/css" href="/loc/css/icon.css" rel="stylesheet">
+    <link type="text/css" href="/loc/css/index.css" rel="stylesheet">
     <script type="text/javascript">
         document.documentElement.style.fontSize = document.documentElement.clientWidth / 768 * 100 + 'px';
     </script>
 
-    <script src="/js/echarts.min.js"></script>
+    <script src="/loc/js/echarts.min.js"></script>
     <style>
         .abc {
 
@@ -613,8 +613,8 @@
     <#-- <div style="clear:both;"></div>-->
 </div>
 <!--数字增长累加动画-->
-<script src="./js/jquery-1.11.0.min.js" type="text/javascript"></script>
-<script src="./js/jquery.numscroll.js" type="text/javascript" charset="utf-8"></script>
+<script src="/loc/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="/loc/js/jquery.numscroll.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     $(".shu1").numScroll();
     $(".shu2").numScroll();
