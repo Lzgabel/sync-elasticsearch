@@ -114,6 +114,20 @@ section {
   letter-spacing: .05rem;
   box-shadow: 0 2rem 4rem #aac1c7;
 }
+
+/* 如果最后一行是4个元素 */
+.card:last-child:nth-child(5n - 1) {
+  margin-right: calc(18% + 8% / 3);
+}
+/* 如果最后一行是3个元素 */
+.card:last-child:nth-child(5n - 2) {
+  margin-right: calc(39% + 8% / 3);
+}
+/* 如果最后一行是2个元素 */
+.card:last-child:nth-child(5n - 3) {
+  margin-right: calc(60% + 10% / 3);
+}
+
 @media screen and (max-width: 480px) {
   .card {
     margin-bottom: 2rem;
