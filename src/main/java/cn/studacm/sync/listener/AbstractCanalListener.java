@@ -1,5 +1,8 @@
 package cn.studacm.sync.listener;
 
+import cn.studacm.sync.configuration.IndexProperties;
+import cn.studacm.sync.configuration.MappingProperties;
+import cn.studacm.sync.event.AbstractCanalEvent;
 import cn.studacm.sync.service.IElasticsearchService;
 import cn.studacm.sync.util.BeanKit;
 import com.alibaba.otter.canal.protocol.CanalEntry.Column;
@@ -9,10 +12,6 @@ import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Maps;
 import com.google.protobuf.InvalidProtocolBufferException;
-import cn.studacm.sync.configuration.IndexProperties;
-import cn.studacm.sync.configuration.MappingProperties;
-import cn.studacm.sync.event.AbstractCanalEvent;
-import cn.studacm.sync.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -101,7 +101,7 @@ public abstract class AbstractCanalListener<EVENT extends AbstractCanalEvent> im
         mysqlTypeElasticsearchTypeMapping.put("text", data -> data);
         mysqlTypeElasticsearchTypeMapping.put("blob", data -> data);
         mysqlTypeElasticsearchTypeMapping.put("int", Long::valueOf);
-        mysqlTypeElasticsearchTypeMapping.put("date", data -> LocalDateTime.parse(data, DATE_FORMATTER));
+        mysqlTypeElasticsearchTypeMapping.put("date", data -> LocalDate.parse(data, DATE_FORMATTER));
         mysqlTypeElasticsearchTypeMapping.put("time", data -> LocalDateTime.parse(data, DATE_TIME_FORMATTER));
         mysqlTypeElasticsearchTypeMapping.put("float", Double::valueOf);
         mysqlTypeElasticsearchTypeMapping.put("double", Double::valueOf);
