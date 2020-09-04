@@ -40,7 +40,8 @@ public abstract class AbstractCanalListener<EVENT extends AbstractCanalEvent> im
     @Resource
     private MappingProperties mappingProperties;
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private Map<String, Function<String, Object>> mysqlTypeElasticsearchTypeMapping;
 
@@ -100,8 +101,8 @@ public abstract class AbstractCanalListener<EVENT extends AbstractCanalEvent> im
         mysqlTypeElasticsearchTypeMapping.put("text", data -> data);
         mysqlTypeElasticsearchTypeMapping.put("blob", data -> data);
         mysqlTypeElasticsearchTypeMapping.put("int", Long::valueOf);
-        mysqlTypeElasticsearchTypeMapping.put("date", data -> LocalDateTime.parse(data, FORMATTER));
-        mysqlTypeElasticsearchTypeMapping.put("time", data -> LocalDateTime.parse(data, FORMATTER));
+        mysqlTypeElasticsearchTypeMapping.put("date", data -> LocalDateTime.parse(data, DATE_FORMATTER));
+        mysqlTypeElasticsearchTypeMapping.put("time", data -> LocalDateTime.parse(data, DATE_TIME_FORMATTER));
         mysqlTypeElasticsearchTypeMapping.put("float", Double::valueOf);
         mysqlTypeElasticsearchTypeMapping.put("double", Double::valueOf);
         mysqlTypeElasticsearchTypeMapping.put("decimal", Double::valueOf);
