@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.studacm.sync.dao.BaseDao">
 
-    <select id="selectByPK" resultType="java.util.HashMap">
+    <select id="selectByPK" resultType="HashMap">
         SELECT
             *
         FROM
@@ -10,7 +10,7 @@
         WHERE ${key} = ${value}
     </select>
 
-    <select id="selectByPKs" resultType="java.util.List">
+    <select id="selectByPKs" resultType="HashMap">
         SELECT
             *
         FROM
@@ -21,7 +21,7 @@
         </foreach>
     </select>
 
-    <select id="selectByPKsLockInShareMode" resultType="java.util.List">
+    <select id="selectByPKsLockInShareMode" resultType="HashMap">
         SELECT
             *
         FROM
@@ -33,7 +33,7 @@
         LOCK IN SHARE MODE
     </select>
 
-    <select id="count" resultType="java.lang.Long">
+    <select id="count" resultType="Long">
         SELECT
             count(1)
         FROM
@@ -41,7 +41,7 @@
         where ${key} <![CDATA[>=]]> ${minPK} and ${key} <![CDATA[<=]]> ${maxPK}
     </select>
 
-    <select id="selectMaxPK" resultType="java.lang.Long">
+    <select id="selectMaxPK" resultType="Long">
         SELECT
             ${key}
         FROM
@@ -50,7 +50,7 @@
         LIMIT 1
     </select>
 
-    <select id="selectMinPK" resultType="java.lang.Long">
+    <select id="selectMinPK" resultType="Long">
         SELECT
         ${key}
         FROM
@@ -59,7 +59,7 @@
         LIMIT 1
     </select>
 
-    <select id="selectByPKInterval" resultType="java.util.HashMap">
+    <select id="selectByPKInterval" resultType="HashMap">
         SELECT
             *
         FROM
@@ -68,7 +68,7 @@
             ${key} <![CDATA[ >= ]]> #{minPK} AND ${key} <![CDATA[ < ]]> #{maxPK}
     </select>
 
-    <select id="selectByPKIntervalLockInShareMode" resultType="java.util.HashMap">
+    <select id="selectByPKIntervalLockInShareMode" resultType="HashMap">
         SELECT
             *
         FROM

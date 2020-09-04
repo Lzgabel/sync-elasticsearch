@@ -8,7 +8,6 @@ import cn.studacm.sync.service.ICountService;
 import cn.studacm.sync.util.TimeUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
@@ -16,12 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -49,11 +46,12 @@ public class CountController {
         return null;
     }
 
-    @GetMapping
-    public ModelAndView index(ModelMap model, ModelAndView view) {
-        // 年提交量柱状图统计
+    @GetMapping(value = {"", "/self/{username}"})
+    public ModelAndView index(ModelMap model, ModelAndView view,
+                              @PathVariable(value = "username", required = false) String userName) {
         // 年提交量统计 -- begin
         CountRequest param = new CountRequest();
+        param.setUsername(userName);
         param.setBegin(TimeUtil.toDate(BEGIN_DATE));
         List<CountDTO> res = countService.count(param);
 

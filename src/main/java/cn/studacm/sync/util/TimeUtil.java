@@ -73,6 +73,16 @@ public class TimeUtil {
     }
 
     /**
+     * LocalDate转LocalDateTime
+     *
+     * @param date
+     * @return
+     */
+    public static LocalDateTime toLocalDateTime(LocalDate date) {
+        return date.atStartOfDay(ZoneOffset.ofHours(8)).toLocalDateTime();
+    }
+
+    /**
      * Date转LocalDate
      *
      * @param date
@@ -231,6 +241,18 @@ public class TimeUtil {
      * @return
      */
     public static LocalDate plusYears(Date date, long years) {
+        LocalDateTime localDateTime = toLocalDateTime(date);
+        return localDateTime.plusYears(years).toLocalDate();
+    }
+
+    /**
+     * 添加指定年数
+     *
+     * @param date
+     * @param years
+     * @return
+     */
+    public static LocalDate plusYears(LocalDate date, long years) {
         LocalDateTime localDateTime = toLocalDateTime(date);
         return localDateTime.plusYears(years).toLocalDate();
     }

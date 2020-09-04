@@ -37,14 +37,8 @@
     <#if i != step[step?size-1]>
         <#assign begin = 4>
     <#else >
-        <script>
-            console.log('size : '+ ${data?size-1} + ' i: '+ ${i})
-        </script>
         <#assign begin = (data?size-1) - i-1>
     </#if>
-    <script>
-        console.log(${begin})
-    </script>
     <#list 0..begin as v>
     <#if v % 5 == 0>
     <div class="card card--oil">
