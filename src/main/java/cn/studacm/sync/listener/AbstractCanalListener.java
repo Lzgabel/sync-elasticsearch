@@ -89,13 +89,12 @@ public abstract class AbstractCanalListener<EVENT extends AbstractCanalEvent> im
      * @return
      */
     private Object convertToElasticsearchType(String mysqlType, String data) {
-        Optional<Map.Entry<String, Function<String, Object>>> result = mysqlTypeElasticsearchTypeMapping.entrySet().parallelStream().filter(entry -> mysqlType.toLowerCase().contains(entry.getKey())).findFirst();
-        return result.isPresent() ? result.get().getValue().apply(data) : data;
+        Function<String, Object> function = mysqlTypeElasticsearchTypeMapping.getOrDefault(mysqlType, v -> v);
+        return function.apply(data);
     }
 
     @Override
     public void afterPropertiesSet() {
-        mysqlTypeElasticsearchTypeMapping = Maps.newHashMap();
         mysqlTypeElasticsearchTypeMapping = Maps.newHashMap();
         mysqlTypeElasticsearchTypeMapping.put("char", data -> data);
         mysqlTypeElasticsearchTypeMapping.put("text", data -> data);

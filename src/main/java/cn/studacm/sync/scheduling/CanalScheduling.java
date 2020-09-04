@@ -1,16 +1,14 @@
 package cn.studacm.sync.scheduling;
 
+import cn.studacm.sync.event.DeleteCanalEvent;
+import cn.studacm.sync.event.InsertCanalEvent;
+import cn.studacm.sync.event.UpdateCanalEvent;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.CanalEntry.Entry;
 import com.alibaba.otter.canal.protocol.CanalEntry.EntryType;
 import com.alibaba.otter.canal.protocol.CanalEntry.EventType;
 import com.alibaba.otter.canal.protocol.Message;
-import cn.studacm.sync.event.DeleteCanalEvent;
-import cn.studacm.sync.event.InsertCanalEvent;
-import cn.studacm.sync.event.UpdateCanalEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
