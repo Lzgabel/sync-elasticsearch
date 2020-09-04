@@ -37,7 +37,7 @@
     <#if i != step[step?size-1]>
         <#assign begin = 4>
     <#else >
-        <#assign begin = (data?size-1) - i-1>
+        <#assign begin = (data?size-1) - i>
     </#if>
     <#list 0..begin as v>
     <#if v % 5 == 0>
