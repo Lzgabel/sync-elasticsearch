@@ -150,7 +150,7 @@ public class CountServiceImpl implements ICountService {
         boolean range = false;
         RangeQueryBuilder rangeQuery = QueryBuilders.rangeQuery("subTime");
         if (Objects.nonNull(request.getBegin())) {
-            rangeQuery.gte(TimeUtil.dateToTimestamp(request.getBegin()));
+            rangeQuery.gt(TimeUtil.dateToTimestamp(request.getBegin()));
             range = true;
         }
 
