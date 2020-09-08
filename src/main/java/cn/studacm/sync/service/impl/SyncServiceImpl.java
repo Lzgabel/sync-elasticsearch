@@ -37,8 +37,8 @@ public class SyncServiceImpl implements ISyncService, InitializingBean, Disposab
     private BaseDao baseDao;
 
 
-    @Resource
-    private ITransactionalService ITransactionalService;
+    @Autowired
+    private ITransactionalService transactionalService;
 
     @Autowired
     MappingProperties properties;
@@ -60,7 +60,7 @@ public class SyncServiceImpl implements ISyncService, InitializingBean, Disposab
             try {
                 long count = minPK > total ? minPK + total : total;
                 for (long i = minPK; i < count; i += request.getStepSize()) {
-                    ITransactionalService.batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize()-1, indexProperties);
+                    transactionalService.batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize()-1, indexProperties);
                     log.info("当前同步pk={}，stepSize={}, 总共total={}", i, request.getStepSize(), total);
                 }
                 log.info("同步完成");

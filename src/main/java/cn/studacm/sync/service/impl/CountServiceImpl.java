@@ -30,6 +30,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -73,8 +79,8 @@ public class CountServiceImpl implements ICountService {
         SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
         DateHistogramAggregationBuilder dateGroup = AggregationBuilders.dateHistogram("group")
                 .field("subTime")
-                .calendarInterval(DateHistogramInterval.YEAR)
-                .format("yyyy")
+                .calendarInterval(DateHistogramInterval.MONTH)
+                .format("MM月")
                 .minDocCount(0);
         AggregationBuilder aggregationBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
         dateGroup.subAggregation(aggregationBuilder);
@@ -202,11 +208,12 @@ public class CountServiceImpl implements ICountService {
 
     @Override
     public List<CountDTO> linelist(CountRequest request) {
+
         SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
         DateHistogramAggregationBuilder dateGroup = AggregationBuilders.dateHistogram("group")
                 .field("subTime")
                 .calendarInterval(DateHistogramInterval.MONTH)
-                .format("yyyy-MM")
+                .format("MM月")
                 .minDocCount(0);
         AggregationBuilder aggregationBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
         dateGroup.subAggregation(aggregationBuilder);
@@ -234,6 +241,40 @@ public class CountServiceImpl implements ICountService {
         return res;
     }
 
+    @Override
+    public List<CountDTO> quarter(CountRequest request) {
+            SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
+            DateHistogramAggregationBuilder dateGroup = AggregationBuilders.dateHistogram("group")
+                    .field("subTime")
+                    .calendarInterval(DateHistogramInterval.QUARTER)
+                    .format("'Q'q")
+                    .minDocCount(0);
+            AggregationBuilder aggregationBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
+            dateGroup.subAggregation(aggregationBuilder);
+            String query = searchSourceBuilder.aggregation(dateGroup).toString();
+
+
+            Search.Builder builder = new Search.Builder(query).addIndex(INDEX_NAME).addType(TYPE_NAME);
+            List<CountDTO> res = Lists.newArrayList();
+            try {
+                SearchResult result = jestClient.execute(builder.build());
+                MetricAggregation aggregations = result.getAggregations();
+                TermsAggregation group = aggregations.getTermsAggregation("group");
+
+                group.getBuckets().forEach(v -> {
+                    SumAggregation codeLines = v.getSumAggregation("codeLines");
+                    CountDTO countDTO = new CountDTO();
+                    countDTO.setDate(v.getKeyAsString());
+                    countDTO.setCodeLines(codeLines.getSum().longValue());
+                    res.add(countDTO);
+                });
+
+            } catch (IOException e) {
+                log.error("查询失败", e);
+            }
+            return res;
+    }
+
     private List<SearchResult.Hit<User, Void>> getUser(List<String> userIdList) {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder().filter(QueryBuilders.termsQuery("userId", userIdList));
@@ -247,5 +288,11 @@ public class CountServiceImpl implements ICountService {
             e.printStackTrace();
         }
         return execute.getHits(User.class);
+    }
+
+    public static void main(String[] args) throws ParseException {
+        DateTimeFormatter QUARTER_FORMAT = DateTimeFormatter.ofPattern("'Q'q");
+        DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println(DATE_FORMAT.parse("2007-01-23").toInstant().atZone(ZoneId.systemDefault()).format(QUARTER_FORMAT));
     }
 }

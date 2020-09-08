@@ -4,6 +4,7 @@
 #    index: 索引名称
 #    type: 类型
 #    primary-key: 数据库主键
+#    process-bean-name: 处理类对应的bean名称
 #
 #
 

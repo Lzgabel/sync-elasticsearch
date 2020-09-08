@@ -8,6 +8,7 @@ import cn.studacm.sync.service.ICountService;
 import cn.studacm.sync.util.TimeUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import io.searchbox.strings.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -61,7 +66,7 @@ public class CountController {
 
         List<String> data = res.stream()
                 .map(CountDTO::getCodeLines)
-                .map(i -> i/10000)
+                .map(i -> i / 10000)
                 .map(String::valueOf)
                 .collect(Collectors.toList());
 
@@ -75,47 +80,64 @@ public class CountController {
         return view;
     }
 
-    @GetMapping(value = {"/count/{username}", "/count"})
+    @GetMapping(value = {"/year/{year}/{username}", "/year/{year}"})
     public ModelAndView detail(ModelMap model,
-                              ModelAndView view,
-                              @PathVariable(value = "username", required = false) String userName) {
+                               ModelAndView view,
+                               @PathVariable(value = "year", required = false) String year,
+                               @PathVariable(value = "username", required = false) String userName) {
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        if (StringUtils.isNotBlank(year)) {
+            DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                    .appendPattern("yyyy")
+                    .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                    .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                    .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+                    .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+                    .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                    .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+                    .parseDefaulting(ChronoField.MILLI_OF_SECOND, 0)
+                    .toFormatter();
+            localDateTime = LocalDateTime.parse(year, formatter);
+        }
+
+        Date date = TimeUtil.toDate(localDateTime);
 
         // 饼图统计
-        pieCount(model, userName);
+        pieCount(date, model, userName);
 
         // 年提交量柱状图统计
-        barCount(model, userName);
+        barCount(date, model, userName);
 
         // 排行榜统计
-        rankCount(model, userName);
+        rankCount(date, model, userName);
 
         // 近6个月折线图统计
-        lineCount(model, userName);
+        lineCount(date, model, userName);
 
         // 季度统计
-        quarterCount(model, userName);
+        quarterCount(date, model, userName);
 
-        view.setViewName("index");
+        view.setViewName("detail");
         return view;
     }
 
-    private void quarterCount(ModelMap model, String userName) {
+    private void quarterCount(Date date, ModelMap model, String userName) {
+        CountRequest request = new CountRequest();
+        request.setEnd(TimeUtil.toDate(TimeUtil.getLastDayOfYear(date)));
+        request.setBegin(TimeUtil.toDate(TimeUtil.getFirstDayOfYear(date)));
+        request.setUsername(userName);
+        List<CountDTO> quarter = countService.quarter(request);
+        Long sum = quarter.stream().map(CountDTO::getCodeLines).mapToLong(Long::longValue).sum();
 
+        model.addAttribute("quarter", quarter);
+        model.addAttribute("sum", sum);
     }
 
-    private void lineCount(ModelMap model, String userName) {
+    private void lineCount(Date date, ModelMap model, String userName) {
         CountRequest request = new CountRequest();
-        LocalDate begin = LocalDate.parse("2009-01-01 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd mm:HH:ss"));
-        LocalDate end = LocalDate.parse("2009-12-23 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd mm:HH:ss"));
-
-        request.setBegin(TimeUtil.toDate(begin));
-        request.setEnd(TimeUtil.toDate(end));
-
-        // TODO 近 6 个月
-//        LocalDate now = LocalDate.now();
-//
-//        request.setBegin(TimeUtil.toDate(now.minusMonths(6)));
-//        request.setEnd(TimeUtil.toDate(now));
+        request.setEnd(TimeUtil.toDate(TimeUtil.getLastDayOfYear(date)));
+        request.setBegin(TimeUtil.toDate(TimeUtil.getFirstDayOfYear(date)));
         request.setUsername(userName);
         List<CountDTO> lineList = countService.linelist(request);
 
@@ -126,15 +148,17 @@ public class CountController {
         model.addAttribute("lineData", lineData);
     }
 
-    private void rankCount(ModelMap model, String userName) {
+    private void rankCount(Date date, ModelMap model, String userName) {
         CountRequest request = new CountRequest();
         request.setUsername(userName);
+        request.setEnd(TimeUtil.toDate(TimeUtil.getLastDayOfYear(date)));
+        request.setBegin(TimeUtil.toDate(TimeUtil.getFirstDayOfYear(date)));
         List<CountDTO> ranklist = countService.ranklist(request);
 
         model.addAttribute("ranklist", ranklist);
     }
 
-    private void barCount(ModelMap model, String userName) {
+    private void barCount(Date date, ModelMap model, String userName) {
         LocalDate now = LocalDate.now();
 
         long diff = TimeUtil.diffYears(BEGIN_DATE, now);
@@ -142,6 +166,8 @@ public class CountController {
         // 年提交量统计 -- begin
         CountRequest param = new CountRequest();
         param.setUsername(userName);
+        param.setEnd(TimeUtil.toDate(TimeUtil.getLastDayOfYear(date)));
+        param.setBegin(TimeUtil.toDate(TimeUtil.getFirstDayOfYear(date)));
         List<CountDTO> res = countService.count(param);
 
         List<String> dataAxis = res.stream()
@@ -159,13 +185,15 @@ public class CountController {
         // 年提交量统计 -- end
     }
 
-    private void pieCount(ModelMap model, String userName) {
+    private void pieCount(Date date, ModelMap model, String userName) {
 
         LocalDate now = LocalDate.now();
         long diff = TimeUtil.diffYears(BEGIN_DATE, now);
 
         CountRequest filterResultRequest = new CountRequest();
         filterResultRequest.setUsername(userName);
+        filterResultRequest.setBegin(TimeUtil.toDate(TimeUtil.getFirstDayOfYear(date)));
+        filterResultRequest.setEnd(TimeUtil.toDate(TimeUtil.getLastDayOfYear(date)));
 
         // 根据结果分组
         Map<Integer, CountDTO> group = countService.groupByResult(filterResultRequest);

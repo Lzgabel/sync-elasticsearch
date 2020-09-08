@@ -43,7 +43,7 @@
                     </li>
                     <li>
                         <div class="liIn">
-                            <h3>年平均</h3>
+                            <h3>月平均</h3>
                             <p class="shu"><span class="shu2">${avg}</span><i>行</i></p>
                             <div class="zi"><span class="span1"></span><span></span></div>
                             <span class="border_bg_leftTop"></span>
@@ -96,7 +96,7 @@
                         //指定图表的配置项和数据
 
                         //var dataAxis = ['1日', '2日', '3日', '4日', '5日', '6日', '7日', '8日', '9日', '10日', '11日', '12日', '13日', '14日', '15日'];
-                        var dataAxis = [<#list dataAxis as item>${item}, </#list>];
+                        var dataAxis = [<#list dataAxis as item>"${item}", </#list>];
                         console.log(dataAxis);
                         //var data = [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 200];
                         var data = [<#list data as item>${item}, </#list>];
@@ -238,10 +238,34 @@
             </div>
             <div class="leftMain_middle_right">
                 <div class="leftMain_middle_rightIn">
-                    <h3>这里是标题</h3>
+                    <h3>季度统计</h3>
                     <div class="biaoge biaoge_pai" style="width:100%; height:25vh">
                         <div class="biaoge_paiIn">
                             <ul>
+                                <#assign i = 1>
+                                <#list quarter as item>
+                                    <li>
+                                        <#if i == 1>
+                                        <div class="liIn">
+                                        <#else >
+                                            <div class="liIn liIn${i%5}">
+                                        </#if>
+                                            <div class="liIn_left"><span class="bot"></span><span class="zi">${item.date}</span>
+                                            </div>
+                                            <div class="liIn_line">
+                                                <style type="text/css">
+                                                    @-webkit-keyframes widthMove1 {
+                                                        0% {width:0%; }
+                                                        100% { width:${(item.codeLines/sum)*100}%; }
+                                                    }
+                                                </style>
+                                                <div class="line_lineIn" style="width:${(item.codeLines/sum)*100}%;"></div>
+                                            </div>
+                                            <p class="num">${(item.codeLines/sum)*100}%</p>
+                                        </div>
+                                    </li>
+                                    <#assign i++>
+                                </#list>
                                 <li>
                                     <div class="liIn">
                                         <div class="liIn_left"><span class="bot"></span><span class="zi">第一名</span>
@@ -311,7 +335,7 @@
         <div class="leftMain_middle">
             <div class="leftMain_middle_left">
                 <div class="leftMain_middle_leftIn">
-                    <h3>近6个月提交量</h3>
+                    <h3>年提交量统计</h3>
                     <div class="biaoge"
                          style="width: 100%; height: 25vh; -webkit-tap-highlight-color: transparent; user-select: none; position: relative;"
                          id="chartmain_zhe" _echarts_instance_="ec_1598945994794">

@@ -42,9 +42,16 @@ public interface ICountService {
 
 
     /**
-     * 近6个月提交量折线图统计
+     * 年提交量折线图统计
      * @param request
      * @return
      */
     List<CountDTO> linelist(CountRequest request);
+
+    /**
+     * 季度统计
+     * @param request
+     * @return
+     */
+    List<CountDTO> quarter(CountRequest request);
 }
