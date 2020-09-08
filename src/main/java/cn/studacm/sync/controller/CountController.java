@@ -86,6 +86,7 @@ public class CountController {
         model.addAttribute("dataAxis", dataAxis.toArray());
         model.addAttribute("step", step);
         model.addAttribute("data", data.toArray());
+        model.addAttribute("userName", userName);
         // 年提交量统计 -- end
         view.setViewName("index");
         return view;

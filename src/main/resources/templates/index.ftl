@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"><a href="/loc/year/${dataAxis[i+v]}"> ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"><a href="/loc/year/${dataAxis[i+v]}/${userName}"> ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
@@ -95,7 +95,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"> <a href="/loc/year/${dataAxis[i+v]}">  ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"> <a href="/loc/year/${dataAxis[i+v]}/${userName}">  ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
@@ -127,7 +127,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"><a href="/loc/year/${dataAxis[i+v]}">   ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"><a href="/loc/year/${dataAxis[i+v]}/${userName}">   ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
@@ -161,7 +161,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"><a href="/loc/year/${dataAxis[i+v]}">   ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"><a href="/loc/year/${dataAxis[i+v]}/${userName}">   ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
@@ -193,7 +193,7 @@
             </div>
         </div>
         <div class="card__stuff-container">
-            <div class="card__stuff-text"><a href="/loc/year/${dataAxis[i+v]}">  ${dataAxis[i+v]}</a></div>
+            <div class="card__stuff-text"><a href="/loc/year/${dataAxis[i+v]}/${userName}">  ${dataAxis[i+v]}</a></div>
         </div>
     </div>
     </#if>
