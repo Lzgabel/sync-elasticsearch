@@ -266,7 +266,7 @@
                                     </li>
                                     <#assign i++>
                                 </#list>
-                                <li>
+                                <#--<li>
                                     <div class="liIn">
                                         <div class="liIn_left"><span class="bot"></span><span class="zi">第一名</span>
                                         </div>
@@ -321,7 +321,7 @@
                                         </div>
                                         <p class="num">22.5%</p>
                                     </div>
-                                </li>
+                                </li>-->
                             </ul>
                         </div>
                     </div>
@@ -568,7 +568,7 @@
                                         'name': "${map[itemKey]}",
                                         </#if>
                                         <#if itemKey="value">
-                                        'value': ${map[itemKey]}
+                                        'value': ${map[itemKey]?c}
                                         </#if>
 
                                         </#list>
