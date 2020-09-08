@@ -29,7 +29,7 @@
 
 <body>
 <section class="title">
-    <p>年提交量数据统计<sup style="font-size:20px">&nbsp;(单位: 行)</sup></p>
+    <p>年提交量数据统计<sup style="font-size:20px">&nbsp;(单位: ${unit})</sup></p>
 </section>
 
 <#list step as i>

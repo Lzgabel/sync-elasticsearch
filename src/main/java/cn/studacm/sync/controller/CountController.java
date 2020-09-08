@@ -66,12 +66,23 @@ public class CountController {
 
         List<String> data = res.stream()
                 .map(CountDTO::getCodeLines)
-                .map(i -> i / 10000)
+                .map(i -> {
+                    if (StringUtils.isNotBlank(userName)) {
+                        return i;
+                    } else {
+                        return i/10000;
+                    }
+                })
                 .map(String::valueOf)
                 .collect(Collectors.toList());
 
         List<Integer> step = IntStream.range(0, data.size()).filter(x -> x % 5 == 0).boxed().collect(Collectors.toList());
 
+        if (StringUtils.isBlank(userName)) {
+            model.addAttribute("unit", "万行");
+        } else {
+            model.addAttribute("unit", "行");
+        }
         model.addAttribute("dataAxis", dataAxis.toArray());
         model.addAttribute("step", step);
         model.addAttribute("data", data.toArray());
