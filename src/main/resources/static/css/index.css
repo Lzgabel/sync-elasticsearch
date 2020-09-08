@@ -231,7 +231,7 @@
 	 0% {width:0%; }
 	 100% { width:98.5%; }
 	 }*/
-@-webkit-keyframes widthMove2 {
+/*@-webkit-keyframes widthMove2 {
 	 0% {width:0%; }
 	 100% { width:88.5%; }
 	 }
@@ -250,7 +250,7 @@
 @-webkit-keyframes widthMove6 {
 	 0% {width:0%; }
 	 100% { width:10.5%; }
-	 }
+	 }*/
 
 .leftMain_middle .leftMain_middle_right .leftMain_middle_rightIn  .biaoge_pai ul li .liIn .num{
 	width:17%;

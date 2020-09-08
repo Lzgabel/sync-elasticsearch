@@ -254,7 +254,7 @@
                                             </div>
                                             <div class="liIn_line">
                                                 <style type="text/css">
-                                                    @-webkit-keyframes widthMove1 {
+                                                    @-webkit-keyframes widthMove${i%5} {
                                                         0% {width:0%; }
                                                         100% { width:${(item.codeLines/sum)*100}%; }
                                                     }
