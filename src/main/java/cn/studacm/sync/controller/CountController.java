@@ -79,9 +79,9 @@ public class CountController {
         List<Integer> step = IntStream.range(0, data.size()).filter(x -> x % 5 == 0).boxed().collect(Collectors.toList());
 
         if (StringUtils.isBlank(userName)) {
-            model.addAttribute("unit", "万行");
+            model.addAttribute("unit", "万");
         } else {
-            model.addAttribute("unit", "行");
+            model.addAttribute("unit", "");
         }
         model.addAttribute("dataAxis", dataAxis.toArray());
         model.addAttribute("step", step);

@@ -29,7 +29,7 @@
 
 <body>
 <section class="title">
-    <p>年提交量数据统计<sup style="font-size:20px">&nbsp;(单位: ${unit})</sup></p>
+    <p>年提交量数据统计<sup style="font-size:20px">&nbsp;(单位: 行)</sup></p>
 </section>
 
 <#list step as i>
@@ -64,7 +64,7 @@
         <div class="card__count-container">
             <div class="card__count-text">
                 <!-- freemarker 转换为数字后除以10000 -->
-                <span class="card__count-text--big">${data[i+v]?number}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> ${unit}
             </div>
         </div>
         <div class="card__stuff-container">
@@ -91,7 +91,7 @@
         </div>
         <div class="card__count-container">
             <div class="card__count-text">
-                <span class="card__count-text--big">${data[i+v]?number}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> ${unit}
             </div>
         </div>
         <div class="card__stuff-container">
@@ -123,7 +123,7 @@
         </div>
         <div class="card__count-container">
             <div class="card__count-text">
-                <span class="card__count-text--big">${data[i+v]?number}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> ${unit}
             </div>
         </div>
         <div class="card__stuff-container">
@@ -157,7 +157,7 @@
         </div>
         <div class="card__count-container">
             <div class="card__count-text">
-                <span class="card__count-text--big">${data[i+v]?number}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> ${unit}
             </div>
         </div>
         <div class="card__stuff-container">
@@ -189,7 +189,7 @@
         </div>
         <div class="card__count-container">
             <div class="card__count-text">
-                <span class="card__count-text--big">${data[i+v]?number}</span> 万
+                <span class="card__count-text--big">${data[i+v]?number}</span> ${unit}
             </div>
         </div>
         <div class="card__stuff-container">
