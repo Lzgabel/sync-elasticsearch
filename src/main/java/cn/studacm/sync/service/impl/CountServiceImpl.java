@@ -33,9 +33,12 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -150,12 +153,12 @@ public class CountServiceImpl implements ICountService {
         boolean range = false;
         RangeQueryBuilder rangeQuery = QueryBuilders.rangeQuery("subTime");
         if (Objects.nonNull(request.getBegin())) {
-            rangeQuery.gt(TimeUtil.dateToTimestamp(request.getBegin()));
+            rangeQuery.gt(TimeUtil.toLocalDateTime(request.getBegin()));
             range = true;
         }
 
         if (Objects.nonNull(request.getEnd())) {
-            rangeQuery.lte(TimeUtil.dateToTimestamp(request.getEnd()));
+            rangeQuery.lte(TimeUtil.toLocalDateTime(request.getEnd()));
             range = true;
         }
         if (range) {
@@ -326,8 +329,20 @@ public class CountServiceImpl implements ICountService {
     }
 
     public static void main(String[] args) throws ParseException {
+
         DateTimeFormatter QUARTER_FORMAT = DateTimeFormatter.ofPattern("'Q'q");
         DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
         System.out.println(DATE_FORMAT.parse("2007-01-23").toInstant().atZone(ZoneId.systemDefault()).format(QUARTER_FORMAT));
+
+
+        LocalDateTime dateTime;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd[dd HH:mm:ss]").withZone(ZoneOffset.ofHours(8));
+        TemporalAccessor temporalAccessor = formatter.parseBest("2020/01", LocalDateTime::from, LocalDate::from);
+        if (temporalAccessor instanceof LocalDateTime) {
+            dateTime = (LocalDateTime)temporalAccessor;
+        } else {
+            dateTime = ((LocalDate)temporalAccessor).atStartOfDay();
+        }
+        System.out.println(TimeUtil.toDateTimeString(dateTime));
     }
 }
