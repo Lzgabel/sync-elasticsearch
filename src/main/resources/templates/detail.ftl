@@ -81,7 +81,7 @@
         <div class="leftMain_middle">
             <div class="leftMain_middle_left">
                 <div class="leftMain_middle_leftIn">
-                    <h3>年提交量统计</h3>
+                    <h3>年提交量柱状统计</h3>
                     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
                     <div class="biaoge"
                          style="width: 100%; height: 25vh; -webkit-tap-highlight-color: transparent; user-select: none;"
@@ -335,7 +335,7 @@
         <div class="leftMain_middle">
             <div class="leftMain_middle_left">
                 <div class="leftMain_middle_leftIn">
-                    <h3>年提交量统计</h3>
+                    <h3>年提交量折线统计图</h3>
                     <div class="biaoge"
                          style="width: 100%; height: 25vh; -webkit-tap-highlight-color: transparent; user-select: none; position: relative;"
                          id="chartmain_zhe" _echarts_instance_="ec_1598945994794">
@@ -425,7 +425,7 @@
                                     name: '折线一',
                                     type: 'line',
                                     stack: '总量',
-                                    data: [<#list lineData as item>${item}, </#list>],
+                                    data: [<#list lineData as item>${item?c}, </#list>],
                                     itemStyle: {
                                         normal: {
                                             color: "#0efdff",//折线点的颜色
