@@ -23,7 +23,16 @@ public interface ICountService {
      * @param request
      * @return
      */
-    List<CountDTO> count(CountRequest request);
+    List<CountDTO> yearCount(CountRequest request);
+
+
+    /**
+     * 统计
+     *
+     * @param request
+     * @return
+     */
+    List<CountDTO> monthCount(CountRequest request);
 
 
     /**

@@ -74,7 +74,42 @@ public class CountServiceImpl implements ICountService {
     JestClient jestClient;
 
     @Override
-    public List<CountDTO> count(CountRequest request) {
+    public List<CountDTO> yearCount(CountRequest request) {
+
+        SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
+        DateHistogramAggregationBuilder dateGroup = AggregationBuilders.dateHistogram("group")
+                .field("subTime")
+                .calendarInterval(DateHistogramInterval.YEAR)
+                .format("yyyy")
+                .minDocCount(0);
+        AggregationBuilder aggregationBuilder = AggregationBuilders.sum("codeLines").field("codeLines");
+        dateGroup.subAggregation(aggregationBuilder);
+        String query = searchSourceBuilder.aggregation(dateGroup).toString();
+
+        Search.Builder builder = new Search.Builder(query).addIndex(INDEX_NAME).addType(TYPE_NAME);
+
+        List<CountDTO> res = Lists.newArrayList();
+        try {
+            SearchResult result = jestClient.execute(builder.build());
+            MetricAggregation aggregations = result.getAggregations();
+            List<DateHistogramAggregation.DateHistogram> group = aggregations.getDateHistogramAggregation("group").getBuckets();
+            group.forEach(v -> {
+                CountDTO countDTO = new CountDTO();
+                String date = v.getTimeAsString();
+                countDTO.setDate(date);
+                SumAggregation codeLines = v.getSumAggregation("codeLines");
+                countDTO.setCodeLines(codeLines.getSum().longValue());
+                res.add(countDTO);
+            });
+        } catch (IOException e) {
+            log.error("查询失败", e);
+        }
+
+        return res;
+    }
+
+    @Override
+    public List<CountDTO> monthCount(CountRequest request) {
 
         SearchSourceBuilder searchSourceBuilder = buildSearchBuilder(request);
         DateHistogramAggregationBuilder dateGroup = AggregationBuilders.dateHistogram("group")

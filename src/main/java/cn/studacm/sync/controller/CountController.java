@@ -58,7 +58,7 @@ public class CountController {
         CountRequest param = new CountRequest();
         param.setUsername(userName);
         param.setBegin(TimeUtil.toDate(BEGIN_DATE));
-        List<CountDTO> res = countService.count(param);
+        List<CountDTO> res = countService.yearCount(param);
 
         List<String> dataAxis = res.stream()
                 .map(CountDTO::getDate)
@@ -168,7 +168,7 @@ public class CountController {
         param.setUsername(userName);
         param.setEnd(TimeUtil.toDate(TimeUtil.getLastDayOfYear(date)));
         param.setBegin(TimeUtil.toDate(TimeUtil.getFirstDayOfYear(date)));
-        List<CountDTO> res = countService.count(param);
+        List<CountDTO> res = countService.monthCount(param);
 
         List<String> dataAxis = res.stream()
                 .map(CountDTO::getDate)
