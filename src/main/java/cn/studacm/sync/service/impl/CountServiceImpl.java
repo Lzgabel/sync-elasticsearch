@@ -148,6 +148,7 @@ public class CountServiceImpl implements ICountService {
 
     private SearchSourceBuilder buildSearchBuilder(CountRequest request) {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.size(0);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolean range = false;
